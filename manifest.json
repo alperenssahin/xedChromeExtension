@@ -33,6 +33,7 @@
         "https://*/*"
       ],
       "js": ["jquery-3.3.1.min.js","content.js"],
+      "css": ["style.css"],
       "run_at": "document_end"
     }
   ],

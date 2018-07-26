@@ -1,0 +1,20 @@
+.XedPop-up{
+     width: 20px;
+     height: 20px;
+     background: brown;
+     position: absolute;
+     border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+
+ }
+.pop-up-inside{
+    width: 250px;
+    height: 400px;
+    left: 30px;
+    overflow: scroll;
+    border: 2px solid rgba(13, 201, 255, 0.57);
+    background: rgba(236, 242, 255, 0.8);
+    position: relative;
+    border-radius: 10px;
+    z-index: 999;
+}
