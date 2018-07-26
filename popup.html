@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style>
+      button {
+        height: 30px;
+        width: 30px;
+        outline: none;
+      }
+
+      body{
+        padding: 10px;
+      }
+      div{
+        border: 1px solid rebeccapurple;
+      }
+      #container{
+        width: 200px;
+        height: 600px;
+      }
+      #logo{
+
+        margin:auto;
+        width: 100px;
+        height: 100px;
+        background-image: url("/images/xed128.png");
+        background-size: contain;
+        background-repeat: no-repeat;
+      }
+    </style>
+  </head>
+  <body>
+  <div id="container">
+    <div id="logo"></div>
+    <div id="inside">
+      <div id="url-box" style="display: flex; justify-content:space-between;">
+      <input class="inside" type="url" id="url-input" placeholder="https://...">
+      <button id="go-url">Git</button></div>
+    </div>
+  </div>
+    <script src="popup.js"></script>
+  </body>
+</html>

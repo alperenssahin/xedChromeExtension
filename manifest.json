@@ -1,0 +1,40 @@
+{
+  "name": "Xedzone Crawler",
+  "version": "1.0",
+  "description": "Build an Extension!",
+  "permissions": ["activeTab", "declarativeContent", "storage","tabs",
+    "notifications",
+    "http://*/",
+    "https://*/"],
+  "options_page": "options.html",
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "page_action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/xed16.png",
+      "32": "images/xed32.png",
+      "48": "images/xed48.png",
+      "128": "images/xed128.png"
+    }
+  },
+  "icons": {
+    "16": "images/xed16.png",
+    "32": "images/xed32.png",
+    "48": "images/xed48.png",
+    "128": "images/xed128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": ["jquery-3.3.1.min.js","content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "manifest_version": 2
+}
