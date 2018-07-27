@@ -1,20 +1,40 @@
 .XedPop-up{
+
      width: 20px;
      height: 20px;
      background: brown;
      position: absolute;
      border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
+    z-index: 10000;
 
  }
 .pop-up-inside{
-    width: 250px;
+    font-size: small;
+    width: max-content;
     height: 400px;
     left: 30px;
     overflow: scroll;
     border: 2px solid rgba(13, 201, 255, 0.57);
     background: rgba(236, 242, 255, 0.8);
+    color:darkslategray;
     position: relative;
     border-radius: 10px;
-    z-index: 999;
+    z-index: 9999;
+}
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid rgba(221, 221, 221, 0.57);
+    text-align: left;
+    padding: 8px;
+
+}
+
+tr:nth-child(even) {
+    background-color: rgba(221, 221, 221, 0.57);
 }
