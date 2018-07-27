@@ -70,13 +70,25 @@ var activeDom = function (ev) {
 
             }
             dom.attr('data-xed', unique_id);
-            active.push(unique_id); //data transferiiçin eklenek activ elemanalrın id listesi todo: de-active olanları düşürmüyor
+            // active.push(unique_id+'');
+            //data transferiiçin eklenek activ elemanalrın id listesi todo: de-active olanları düşürmüyor
         }
+        let uID =  dom.children('.XedPop-up').get(0).id;
+        active.push(uID);
+        console.log(active);
         dom.addClass('XedActive'); //başlangıç  sınıfı
         $('#' + dom.attr('data-xed')).css('display', 'block');
         dom.css('border', '3px solid deepskyblue');
     } else {
         dom.removeClass('XedActive');
+        // listeden çıkar
+        let uID =  dom.children('.XedPop-up').get(0).id;
+        console.log(uID);
+        let index = active.indexOf(uID);
+        if (index > -1) {
+            active.splice(index, 1);
+        }
+        console.log(active);
         dom.addClass('XedActivated'); //tekrarı engellemek için ikincil kontrol sınıfı
         dom.css('border', '0px solid deepskyblue');
         $('#' + dom.attr('data-xed')).css('display', 'none');
