@@ -5,12 +5,25 @@
 'use strict';
 
 chrome.runtime.onInstalled.addListener(function() {
+    /**
+     * call extention main content js
+     */
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         chrome.tabs.executeScript(
             {file:'content.js'}
         );
     });
-  chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
+
+    /**
+     * communication block
+     */
+    chrome.runtime.sendMessage({greeting: "helll"}, function(response) {
+        console.log(response.farewell);
+    });
+    /*
+     * permission control
+     */
+    chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
     chrome.declarativeContent.onPageChanged.addRules([{
       conditions: [new chrome.declarativeContent.PageStateMatcher({
         // pageUrl: {hostEquals: 'developer.chrome.com'},

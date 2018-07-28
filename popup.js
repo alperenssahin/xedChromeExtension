@@ -7,10 +7,12 @@
 let Go_url = document.getElementById('go-url');
 
 
-
 Go_url.onclick = function(elementi) {
-    let url = document.getElementById('url-input').value;
-
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {greeting: "hell"}, function(response) {
+            console.log(response.farewell);
+        });
+    });
 
   //   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
   //   chrome.tabs.executeScript(
