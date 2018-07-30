@@ -49,6 +49,7 @@ $(document).mousemove(function (ev) {
 /*
  * elementin ailesinin sınıflarını düzenlerken select etşketinin dinlenmesi
  */
+var gettype = [];
 $(document).change(function (ev) {
     let dom = $(ev.target);
     ///////////////////
@@ -72,21 +73,21 @@ $(document).change(function (ev) {
      * getType değişkenlerinin seçimini kontrol eder ilgili json tabloyu  olusturur.
      */
     //////////////////
+
     if (dom.hasClass('XedgetType')) {
 
         let conn = dom.prop('checked');
         let t_ID = dom.attr('id');
-        let get = [];
+
         if (conn) {
-            get.push(dom.val());
+            window.gettype.push(dom.val());
         } else {
-            //todo:çalışmıyor
-            let index = get.indexOf(dom.val());
+            let index = window.gettype.indexOf(dom.val());
             if (index > -1) {
-                get.splice(index, 1);
+                window.gettype.splice(index, 1);
             }
         }
-        obj.rules[t_ID].get = get;
+        obj.rules[t_ID].get = window.gettype;
         console.log('Changed::type');
     }
     /////////////////
@@ -107,13 +108,9 @@ $(document).change(function (ev) {
         let par = getParent(t_ID);
         let children = [];//todo: python kodlardaki rules generatoru kontrol et
         let count = dom.attr('id');
-        var co = 0;
         console.log(count);
-        for (let i of par) {
-            children.push(i.tag.toLowerCase());
-            if (count == co) break;
-
-            co++;
+        for (let i = 0; i<Number(count); i++) {
+            children.push(par[i].tag.toLowerCase());
         }
         obj.rules[t_ID].children = children;
         console.log(dom.val());
@@ -142,7 +139,6 @@ var activeDom = function (ev) {
             }
             dom.attr('data-xed', unique_id);
             // active.push(unique_id+'');
-            //data transferiiçin eklenek activ elemanalrın id listesi todo: de-active olanları düşürmüyor
         }
         let uID = dom.children('.XedPop-up').get(0).id || unique_id.toString();
         active.push(uID);
