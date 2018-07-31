@@ -1,49 +1,35 @@
-/*
-* save current url on local storage
-* */
 
+/**
+ * local storage
+ * @type {string}
+ */
 var url = window.location.href;
 var obj = {url: url, rules: {}};
 chrome.storage.local.set({url: url}, function () {
     console.log('Current Url is set to ,' + url)
 });
-chrome.runtime.onMessage.addListener(
-    function (request, sender, sendResponse) {
-        console.log('XedRules Generator: Started...');
-        if (request.greeting == "hell")
+var trig = false;
+var lastdom;
+var lastactivated;
+$(document).keypress(function (ev) {
+    if ($('#ctrl.Xedcrawlcontroller').prop('checked')) {
+        //use lastdom ...
+        if (!window.lastdom.hasClass('Xed')) {
+            activeDom(window.lastdom);
+            window.lastactivated = window.lastdom;
+        }
 
-            sendResponse({farewell: "goodbye"});
-    });
-/*
- *  control and marking active dom element
- *  todo: js code ile kontrol edilen linklere tıklamadan işaretlemek
- **/
-
-$(document).click(function (ev) {
-    var dom = $(ev.target);
-
-    if (dom[0].nodeName === 'TBODY') {
-        return 0;
-    }
-    if (!dom.hasClass('Xedinside')) {
-        activeDom(ev);
-    }
-    if (dom.hasClass('XedPop-up')) {
-        pop_up(dom);
+        console.log(String.fromCharCode(ev.which));
     }
 });
-
-
-/**
- * remove 'a' href for use effectively activeDom
- */
-$(document).mousemove(function (ev) {
-    var d = new Date();
-    var t = d.getTime();
-    // console.log($(ev.target)[0].nodeName);
-    if ($(ev.target)[0].nodeName === 'A') {
-        $(ev.target).attr('href', '#' + t);
-    }
+$(document).keydown(function () {
+    window.trig = true;
+});
+$(document).keyup(function () {
+    window.trig = false;
+});
+$(document).mousemove(function (e) {
+    window.lastdom = $(e.target);
 });
 
 /*
@@ -109,7 +95,7 @@ $(document).change(function (ev) {
         let children = [];//todo: python kodlardaki rules generatoru kontrol et
         let count = dom.attr('id');
         console.log(count);
-        for (let i = 0; i<Number(count); i++) {
+        for (let i = 0; i < Number(count); i++) {
             children.push(par[i].tag.toLowerCase());
         }
         obj.rules[t_ID].children = children;
@@ -126,31 +112,25 @@ $(document).change(function (ev) {
  * Element üzerine tıklandığında pop-up ekleme
  */
 var active = [];
-var activeDom = function (ev) {
+var activeDom = function (domm) {
     var d = new Date();
-    var dom = $(ev.target);
-    let unique_id;
-    if (!dom.hasClass('XedActive') && !dom.hasClass('Xedinside')) {
-        if (!dom.hasClass('XedActivated') && !dom.hasClass('Xedinside')) {
-            unique_id = d.getTime();  //başlangıç  id
-            if (!dom.hasClass('XedPop-up') && !dom.hasClass('pop-up-inside') && !dom.hasClass('Xedinside')) {
-                dom.append('<div class="XedPop-up Xedinside" id="' + unique_id + '"></div>');
-
-            }
-            dom.attr('data-xed', unique_id);
-            // active.push(unique_id+'');
+    var dom = domm;
+    let uID = dom.attr('data-xed');
+    if (!dom.hasClass('XedActive')) {
+        if (!dom.hasClass('XedActivated')) {
+            uID = d.getTime();  //başlangıç  id
+            dom.attr('data-xed', uID);
+            dom.append('<div id="'+uID+'" class="XedInnerElement"></div>');
         }
-        let uID = dom.children('.XedPop-up').get(0).id || unique_id.toString();
-        active.push(uID);
+        //todo:controller yeniden düzenlenecek yeni yapı kurulacak
+        active.push(uID.toString());
         obj.rules[uID] = {target: null, get: null, attribute: null, children: null};
         console.log(active);
         dom.addClass('XedActive'); //başlangıç  sınıfı
-        $('#' + dom.attr('data-xed')).css('display', 'block');
         dom.css('border', '3px solid deepskyblue');
+
     } else {
         dom.removeClass('XedActive');
-        // listeden çıkar
-        let uID = dom.children('.XedPop-up').get(0).id;
         // console.log(uID);
         let index = active.indexOf(uID);
         delete obj.rules[uID];
@@ -160,24 +140,23 @@ var activeDom = function (ev) {
         console.log(active);
         dom.addClass('XedActivated'); //tekrarı engellemek için ikincil kontrol sınıfı
         dom.css('border', '0px solid deepskyblue');
-        $('#' + dom.attr('data-xed')).css('display', 'none');
     }
 };
 /**
  *control pop-up option
  */
 
-var pop_up = function (domm) {
-    let id = domm.get(0).id;
-    let dom = $('#' + id);
+var show_detail = function (domm) {
+    let id = domm.attr('data-xed');
+    let dom = $('#right.Xedpanel');
     if (!dom.hasClass('open')) {
         if (!dom.hasClass('init')) {
             dom.addClass('init'); //tekrarı durdurmak adına kontrol sınıfı
-            dom.append('<div class="pop-up-inside Xedinside" id="' + id + '"><div class="Xedcontainer Xedinside">' +
-                '<div id="' + id + '" class="get-type-xed Xedinside" style="border: 0px solid sandybrown">' +
+            dom.html('<div class="pop-up-inside Xedinside" id="' + id + '"><div class="Xed Xedcontainer Xedinside">' +
+                '<div id="' + id + '" class="Xed get-type-xed Xedinside" style="border: 0px solid sandybrown">' +
                 '' +
                 '</div>' +
-                '<div id="' + id + '" class="get-parent-xed Xedinside"></div>' +
+                '<div id="' + id + '" class="Xed get-parent-xed Xedinside"></div>' +
                 '</div></div>');
             /**
              * todo: Attribute matris datası ile ooluşturulacak  elemntlerin eklenmesi gereken kısım
@@ -189,18 +168,19 @@ var pop_up = function (domm) {
             $('#' + id + '-' + parents.best.count).css('border', '2px solid sandybrown');
             $('#' + id + '.XedSelectbox').val(parents.best.class);
         } else {
-            $('#' + id + '.pop-up-inside').slideUp(500);
+
             dom.addClass('open');
 
 
         }
     } else {
         dom.removeClass('open');
-        $('#' + id + '.pop-up-inside').slideDown(500);
+
     }
 
 
 };
+
 /**
  * Çekilmek sitenen elementin ailesini döndürür.
  * @param id
@@ -208,7 +188,7 @@ var pop_up = function (domm) {
  */
 var getParent = function (id) {
     var parents = [];
-    var par = $('#' + id + '.pop-up-inside').parents()
+    var par = $('#' + id + '.XedInnerElement').parents()
         .map(function () {
             return {tag: this.tagName, id: this.id, class: this.className};
         });
@@ -228,13 +208,13 @@ var getParent = function (id) {
  */
 var parentsDomGenerator = function (id) {
 
-    var str = '<table class="parentcontainer Xedinside" id="' + id + '">' + //tablo declarasyonu
-        '<tr class="Xedinside">' +
-        '<th class="Xedinside">Count</th>' +
-        '<th class="Xedinside">Tag</th>' +
-        '<th class="Xedinside">Classname</th>' +
-        '<th class="Xedinside">Id</th>' +
-        '<th class="Xedinside">Approve</th>' +
+    var str = '<table class="Xed parentcontainer Xedinside" id="' + id + '">' + //tablo declarasyonu
+        '<tr class="Xed Xedinside">' +
+        '<th class="Xed Xedinside">Count</th>' +
+        '<th class="Xed Xedinside">Tag</th>' +
+        '<th class="Xed Xedinside">Classname</th>' +
+        '<th class="Xed Xedinside">Id</th>' +
+        '<th class="Xed Xedinside">Approve</th>' +
         '</tr>';
     var parents = getParent(id);
     let pivot = parents[0].tag;
@@ -281,22 +261,22 @@ var parentsDomGenerator = function (id) {
     for (let i of parents) {   //tablo oluşumu
         var classes = i.class.split(' ');
         var cls =
-            '<select class="Xedinside XedSelectbox" id="' + id + '" data-row="' + c + '" >';
+            '<select class="Xed Xedinside XedSelectbox" id="' + id + '" data-row="' + c + '" >';
         for (let x of classes) {
             if (x === 'XedActive' || x === 'XedActivated' || x === '') continue;
-            cls += '<option class="Xedinside" value="' + x + '">' + x + '</option>';
+            cls += '<option class="Xed Xedinside" value="' + x + '">' + x + '</option>';
         }
         cls += '</select>';
 
         let count = countGenerator(i.tag.toLowerCase(), i.id, classes[0]);
         // console.log(i.tag + ' '+ i.id + ' '+classes[0]);
-        str += '<tr class="Xedinside Xedrow" id="' + id + '-' + c + '" >' +
-            '<td class="Xedinside Xedcount" id="' + c + '">' + count + '</td>' +
-            '<td class="Xedinside Xedtarget" id="' + c + '">' + i.tag + '</td>' +
-            '<td class="Xedclassname Xedinside" id="' + c + '">' + cls + '</td>' +
-            '<td class="Xedid Xedinside" id="' + c + '">' + i.id + '</td>' +
-            '<td class="Xedinside" style="justify-content: center;display: flex;">' +
-            '<input class="Xedinside XedTarget" id="' + c + '" type="radio" name="parent" value="' + i.tag.toLowerCase() + '" data-id="' + id + '"></td>' +
+        str += '<tr class="Xed Xedinside Xedrow" id="' + id + '-' + c + '" >' +
+            '<td class="Xed Xedinside Xedcount" id="' + c + '">' + count + '</td>' +
+            '<td class="Xed Xedinside Xedtarget" id="' + c + '">' + i.tag + '</td>' +
+            '<td class="Xed Xedclassname Xedinside" id="' + c + '">' + cls + '</td>' +
+            '<td class="Xed Xedid Xedinside" id="' + c + '">' + i.id + '</td>' +
+            '<td class="Xed Xedinside" style="justify-content: center;display: flex;">' +
+            '<input class="Xed Xedinside XedTarget" id="' + c + '" type="radio" name="parent" value="' + i.tag.toLowerCase() + '" data-id="' + id + '"></td>' +
             '</tr>';
         c++;
 
@@ -339,18 +319,18 @@ var getType = function (domm, id) {
     let dom = domm.parent();
     console.log('node: ' + dom.get(0).nodeName);
     let str = '';
-    str += '<div class="Xedinside" style="display: flex; justify-content: space-around; padding:20px;">';
+    str += '<div class="Xed Xedinside" style="display: flex; justify-content: space-around; padding:20px;">';
     if (dom.attr('href')) {
-        str += '<div><span class="Xedinside XedGetTypeHref" id="' + id + '">Href:</span>' +
-            '<input type="checkbox" id="' + id + '" class="Xedinside XedHrefcheckbox XedgetType" value="href"></div>';
+        str += '<div><span class="Xed Xedinside XedGetTypeHref" id="' + id + '">Href:</span>' +
+            '<input type="checkbox" id="' + id + '" class="Xed Xedinside XedHrefcheckbox XedgetType" value="href"></div>';
     }
     if (dom.attr('src')) {
-        str += '<div><span class="Xedinside XedGetTypeSrc" id="' + id + '">Src:</span>' +
+        str += '<div><span class="Xed Xedinside XedGetTypeSrc" id="' + id + '">Src:</span>' +
             '<input type="checkbox" id="' + id + '" class="Xedinside XedScrcheckbox XedgetType" value="src"></div>';
     }
 
-    str += '<div><span class="Xedinside XedGetTypeText" id="' + id + '">Text:</span>' +
-        '<input type="checkbox" id="' + id + '" class="Xedinside XedTextcheckbox XedgetType" value="text"></div>';
+    str += '<div><span class="Xed Xedinside XedGetTypeText" id="' + id + '">Text:</span>' +
+        '<input type="checkbox" id="' + id + '" class="Xed Xedinside XedTextcheckbox XedgetType" value="text"></div>';
     str += '</div>';
     return str;
 };

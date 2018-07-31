@@ -14,15 +14,10 @@ chrome.runtime.onInstalled.addListener(function() {
         );
     });
 
-    /**
-     * communication block
-     */
-    chrome.runtime.sendMessage({greeting: "helll"}, function(response) {
-        console.log(response.farewell);
-    });
     /*
      * permission control
      */
+    
     chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
     chrome.declarativeContent.onPageChanged.addRules([{
       conditions: [new chrome.declarativeContent.PageStateMatcher({

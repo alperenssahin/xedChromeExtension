@@ -1,26 +1,26 @@
 .XedPop-up{
 
-     width: 20px;
-     height: 20px;
-     background: brown;
-     position: absolute;
-     border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    z-index: 10000;
+     /*width: 20px;*/
+     /*height: 20px;*/
+     /*background: brown;*/
+     /*position: absolute;*/
+     /*border-bottom-left-radius: 10px;*/
+    /*border-bottom-right-radius: 10px;*/
+    /*z-index: 10000;*/
 
  }
 .pop-up-inside{
-    font-size: small;
-    width: max-content;
-    height: 400px;
-    left: 30px;
-    overflow: scroll;
-    border: 2px solid rgba(13, 201, 255, 0.57);
-    background: rgba(236, 242, 255, 0.8);
-    color:darkslategray;
-    position: relative;
-    border-radius: 10px;
-    z-index: 9999;
+    /*font-size: small;*/
+    /*width: max-content;*/
+    /*height: 400px;*/
+    /*left: 30px;*/
+    /*overflow: scroll;*/
+    /*border: 2px solid rgba(13, 201, 255, 0.57);*/
+    /*background: rgba(236, 242, 255, 0.8);*/
+    /*color:darkslategray;*/
+    /*position: relative;*/
+    /*border-radius: 10px;*/
+    /*z-index: 9999;*/
 }
 table {
     font-family: arial, sans-serif;
@@ -37,4 +37,37 @@ td, th {
 
 tr:nth-child(even) {
     background-color: rgba(221, 221, 221, 0.57);
+}
+
+
+/*control.js*/
+#container.XedTop{
+    position: sticky;
+    top:0px;
+    z-index: 999999;
+    overflow: scroll;
+}
+.XedTop{
+    background-color: #ffce58;
+}
+ #right.XedInside{
+     padding: 5px;
+
+
+ }
+ #left.XedInside{
+     padding: 5px;
+
+ }
+
+ #panel.XedControl{
+     width: 100%;
+     height: 150px;
+     background-color: #fff4d2;
+ }
+ #toggle.Xed{
+     cursor: pointer;
+ }
+#currentUrl.Xed{
+
 }
