@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    //todo:tablo uzerinden hangi hedef seçilebilir yada href seçeneği ilk a tagının herefini çeker
     /**
      * Crawler Controller setup
      * @type {string}

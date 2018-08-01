@@ -1,4 +1,3 @@
-
 /**
  * local storage
  * @type {string}
@@ -14,12 +13,20 @@ var lastactivated;
 $(document).keypress(function (ev) {
     if ($('#ctrl.Xedcrawlcontroller').prop('checked')) {
         //use lastdom ...
-        if (!window.lastdom.hasClass('Xed')) {
+        if (!window.lastdom.hasClass('Xed') && (String.fromCharCode(ev.which) === 'x' || String.fromCharCode(ev.which) === 'X' ))  {
             activeDom(window.lastdom);
             window.lastactivated = window.lastdom;
         }
+        if (!window.lastdom.hasClass('Xed') && (String.fromCharCode(ev.which) === 'd' || String.fromCharCode(ev.which) === 'D' ))  {
+            let Id = window.lastdom.attr('data-xed');
+            if(Id != undefined){
 
-        console.log(String.fromCharCode(ev.which));
+            show_detail(Id);
+            }
+
+            window.lastactivated = window.lastdom;
+        }
+        // console.log();
     }
 });
 $(document).keydown(function () {
@@ -120,7 +127,7 @@ var activeDom = function (domm) {
         if (!dom.hasClass('XedActivated')) {
             uID = d.getTime();  //başlangıç  id
             dom.attr('data-xed', uID);
-            dom.append('<div id="'+uID+'" class="XedInnerElement"></div>');
+            dom.append('<div id="' + uID + '" class="XedInnerElement"></div>');
         }
         //todo:controller yeniden düzenlenecek yeni yapı kurulacak
         active.push(uID.toString());
@@ -128,7 +135,7 @@ var activeDom = function (domm) {
         console.log(active);
         dom.addClass('XedActive'); //başlangıç  sınıfı
         dom.css('border', '3px solid deepskyblue');
-
+        show_detail(uID);
     } else {
         dom.removeClass('XedActive');
         // console.log(uID);
@@ -146,37 +153,23 @@ var activeDom = function (domm) {
  *control pop-up option
  */
 
-var show_detail = function (domm) {
-    let id = domm.attr('data-xed');
+var show_detail = function (id) {
     let dom = $('#right.Xedpanel');
-    if (!dom.hasClass('open')) {
-        if (!dom.hasClass('init')) {
-            dom.addClass('init'); //tekrarı durdurmak adına kontrol sınıfı
-            dom.html('<div class="pop-up-inside Xedinside" id="' + id + '"><div class="Xed Xedcontainer Xedinside">' +
-                '<div id="' + id + '" class="Xed get-type-xed Xedinside" style="border: 0px solid sandybrown">' +
-                '' +
-                '</div>' +
-                '<div id="' + id + '" class="Xed get-parent-xed Xedinside"></div>' +
-                '</div></div>');
-            /**
-             * todo: Attribute matris datası ile ooluşturulacak  elemntlerin eklenmesi gereken kısım
-             *
-             */
-            let parents = parentsDomGenerator(id); //elementin ailesi ve en iyi crawl seçeniği
-            $('#' + id + '.get-parent-xed').append(parents.data);
-            $('#' + id + '.get-type-xed').append(getType(dom, id)); // elementin çekilebilecek attributleri
-            $('#' + id + '-' + parents.best.count).css('border', '2px solid sandybrown');
-            $('#' + id + '.XedSelectbox').val(parents.best.class);
-        } else {
-
-            dom.addClass('open');
-
-
-        }
-    } else {
-        dom.removeClass('open');
-
-    }
+    dom.html('<div class="pop-up-inside Xed" id="' + id + '"><div class="Xed Xedcontainer ">' +
+        '<div id="' + id + '" class="Xed get-type-xed " style="border: 0px solid sandybrown">' +
+        '' +
+        '</div>' +
+        '<div id="' + id + '" class="Xed get-parent-xed "></div>' +
+        '</div></div>');
+    /**
+     * todo: Attribute matris datası ile ooluşturulacak  elemntlerin eklenmesi gereken kısım
+     *
+     */
+    let parents = parentsDomGenerator(id); //elementin ailesi ve en iyi crawl seçeniği
+    $('#' + id + '.get-parent-xed').append(parents.data);
+    $('#' + id + '.get-type-xed').append(getType(dom, id)); // elementin çekilebilecek attributleri
+    $('#' + id + '-' + parents.best.count).css('border', '2px solid sandybrown');
+    $('#' + id + '.XedSelectbox').val(parents.best.class);
 
 
 };
@@ -187,17 +180,21 @@ var show_detail = function (domm) {
  * @returns {Array}
  */
 var getParent = function (id) {
+    console.log(id);
     var parents = [];
     var par = $('#' + id + '.XedInnerElement').parents()
+
         .map(function () {
             return {tag: this.tagName, id: this.id, class: this.className};
         });
-    for (let x = 1; x < par.length; x++) {
+    console.log(par);
+    for (let x = 0; x < par.length; x++) {
         var t = {tag: par[x].tag, class: par[x].class, id: par[x].id};
         parents.push(t);
+
     }
     // console.log(types);
-
+    console.log(parents);
     return parents;
     // console.log(JSON.stringify(par));
 };
@@ -208,30 +205,31 @@ var getParent = function (id) {
  */
 var parentsDomGenerator = function (id) {
 
-    var str = '<table class="Xed parentcontainer Xedinside" id="' + id + '">' + //tablo declarasyonu
-        '<tr class="Xed Xedinside">' +
-        '<th class="Xed Xedinside">Count</th>' +
-        '<th class="Xed Xedinside">Tag</th>' +
-        '<th class="Xed Xedinside">Classname</th>' +
-        '<th class="Xed Xedinside">Id</th>' +
-        '<th class="Xed Xedinside">Approve</th>' +
+    var str = '<table class="Xed parentcontainer " id="' + id + '">' + //tablo declarasyonu
+        '<tr class="Xed ">' +
+        '<th class="Xed ">Count</th>' +
+        '<th class="Xed ">Tag</th>' +
+        '<th class="Xed ">Classname</th>' +
+        '<th class="Xed ">Id</th>' +
+        '<th class="Xed ">Approve</th>' +
         '</tr>';
     var parents = getParent(id);
-    let pivot = parents[0].tag;
+    // console.log(parents);
+    let pivot = parents[0].tag; //Seçilmek istenen element
 
 
     var bestoption;   //bestoption selecting
-    for (let i of parents) {
-        let str = i.tag;
-        if (i.id !== '') {
-            str += '#' + i.id;
-        }
-        if (i.class !== '') {
-            str += '.' + i.class;
-        }
-        // console.log(str);
-        break;
-    }
+    // for (let i of parents) {
+    //     let str = i.tag;
+    //     if (i.id !== '') {
+    //         str += '#' + i.id;
+    //     }
+    //     if (i.class !== '') {
+    //         str += '.' + i.class;
+    //     }
+    //     // console.log(str);
+    //     break;
+    // }
     let co = 0;
     for (let i of parents) {
         if (i.class === '' && i.id === '') {

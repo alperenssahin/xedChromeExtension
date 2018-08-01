@@ -46,7 +46,10 @@ tr:nth-child(even) {
     top:0px;
     z-index: 999999;
     overflow: scroll;
+    max-height: 250px;
+    border-bottom: 5px solid rgba(21, 21, 21, 0.85);
 }
+
 .XedTop{
     background-color: #ffce58;
 }
@@ -62,12 +65,23 @@ tr:nth-child(even) {
 
  #panel.XedControl{
      width: 100%;
-     height: 150px;
+     min-height: 150px;
      background-color: #fff4d2;
+
  }
  #toggle.Xed{
      cursor: pointer;
  }
 #currentUrl.Xed{
 
+}
+#right.Xedpanel{
+    padding-right: 10px;
+    font-size: 12px;
+    width: 100%;
+}
+#left.Xedpanel{
+    padding-left: 10px;
+    font-size: 12px;
+    min-width: 25%;
 }
