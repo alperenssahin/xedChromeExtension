@@ -2,30 +2,61 @@
  * local storage
  * @type {string}
  */
-var url = window.location.href;
+let url = window.location.href;
 var obj = {url: url, rules: {}};
-chrome.storage.local.set({url: url}, function () {
-    console.log('Current Url is set to ,' + url)
-});
 var trig = false;
 var lastdom;
 var lastactivated;
+var cReff = {};
+var crawl = false;
+chrome.runtime.onMessage.addListener(
+    function (request) {
+        if (request.key == "reference") {
+            cReff = request.data;
+            crawl = true;
+            // var attr = cReff.category.attributes;
+            // for(let x in attr){
+            //     console.log(attr[x]);
+            // }
+
+            // console.log(cReff);
+        }
+    });
+$(document).mouseup(function (ev) {
+    let dom = $(ev.target);
+    if (dom.hasClass('Xedcrawlcontroller')) {
+
+        if (crawl) {
+            // console.log('gogogo');
+            return;
+        } else {
+            console.log('attributes not initialised');
+            $('#ctrl.Xedcrawlcontroller').prop('checked', 'false');
+        }
+    }
+});
+
 $(document).keypress(function (ev) {
     if ($('#ctrl.Xedcrawlcontroller').prop('checked')) {
         //use lastdom ...
-        if (!window.lastdom.hasClass('Xed') && (String.fromCharCode(ev.which) === 'x' || String.fromCharCode(ev.which) === 'X' ))  {
+        if (!window.lastdom.hasClass('Xed') && (String.fromCharCode(ev.which) === 'x' || String.fromCharCode(ev.which) === 'X')) {
             activeDom(window.lastdom);
             window.lastactivated = window.lastdom;
         }
-        if (!window.lastdom.hasClass('Xed') && (String.fromCharCode(ev.which) === 'd' || String.fromCharCode(ev.which) === 'D' ))  {
+        if (!window.lastdom.hasClass('Xed') && (String.fromCharCode(ev.which) === 'd' || String.fromCharCode(ev.which) === 'D')) {
             let Id = window.lastdom.attr('data-xed');
-            if(Id != undefined){
+            if (Id != undefined) {
 
-            show_detail(Id);
+                show_detail(Id);
             }
 
             window.lastactivated = window.lastdom;
         }
+        $('.XedConfirmRule').click(function () {
+            // alert('a');
+            let id = $(this).get(0).id;
+            checkRule(id);
+        });
         // console.log();
     }
 });
@@ -39,11 +70,30 @@ $(document).mousemove(function (e) {
     window.lastdom = $(e.target);
 });
 
+
+/**
+ * Attribute select list basar
+ */
+var attrList = function (id) {
+    let str = '<select class="Xed Xedattr XedSelect" id="' + id + '">';
+    let attr = cReff.category.attributes;
+    for (let x in attr) {
+        let atr = attr[x];
+        str += '<option class="Xed XedOption" value="' + atr.uID.$uuid + '" data-type="' + atr.type + '">' + atr.title + '</option>';
+    }
+
+    str += '</select>';
+    return str;
+};
+
+
 /*
  * elementin ailesinin sınıflarını düzenlerken select etşketinin dinlenmesi
  */
-var gettype = [];
+
 $(document).change(function (ev) {
+
+
     let dom = $(ev.target);
     ///////////////////
     /**
@@ -72,15 +122,15 @@ $(document).change(function (ev) {
         let conn = dom.prop('checked');
         let t_ID = dom.attr('id');
 
+
         if (conn) {
-            window.gettype.push(dom.val());
+            obj.rules[t_ID].get.push(dom.val());
         } else {
-            let index = window.gettype.indexOf(dom.val());
+            let index = obj.rules[t_ID].get.indexOf(dom.val());
             if (index > -1) {
-                window.gettype.splice(index, 1);
+                obj.rules[t_ID].get.splice(index, 1);
             }
         }
-        obj.rules[t_ID].get = window.gettype;
         console.log('Changed::type');
     }
     /////////////////
@@ -112,6 +162,18 @@ $(document).change(function (ev) {
         console.log('Changed::target');
     }
     ////////////////
+    /**
+     * attr relation
+     */
+
+    if (dom.hasClass('Xedattr')) {
+        let t_ID = dom.attr('id');
+        console.log(obj.rules[t_ID]);
+        obj.rules[t_ID].reference.attrID = dom.val();
+        obj.rules[t_ID].reference.attrTitle = dom.children('option:selected').text();
+        $('#reffattr-text.Xed').text(obj.rules[t_ID].reference.attrTitle);
+    }
+
 });
 
 /**
@@ -129,10 +191,16 @@ var activeDom = function (domm) {
             dom.attr('data-xed', uID);
             dom.append('<div id="' + uID + '" class="XedInnerElement"></div>');
         }
-        //todo:controller yeniden düzenlenecek yeni yapı kurulacak
+
         active.push(uID.toString());
-        obj.rules[uID] = {target: null, get: null, attribute: null, children: null};
-        console.log(active);
+        obj.rules[uID] = {
+            target: null,
+            get: [],
+            attribute: null,
+            children: null,
+            reference: {newType: null, attrID: null, attrTitle: null, newAttr: null}
+        };
+        // console.log(active);
         dom.addClass('XedActive'); //başlangıç  sınıfı
         dom.css('border', '3px solid deepskyblue');
         show_detail(uID);
@@ -144,7 +212,7 @@ var activeDom = function (domm) {
         if (index > -1) {
             active.splice(index, 1);
         }
-        console.log(active);
+        // console.log(active);
         dom.addClass('XedActivated'); //tekrarı engellemek için ikincil kontrol sınıfı
         dom.css('border', '0px solid deepskyblue');
     }
@@ -156,10 +224,12 @@ var activeDom = function (domm) {
 var show_detail = function (id) {
     let dom = $('#right.Xedpanel');
     dom.html('<div class="pop-up-inside Xed" id="' + id + '"><div class="Xed Xedcontainer ">' +
+        '<div id="' + id + '" class="Xed get-reference"><strong class="Xed">Reference:</strong><div id="reffattr-text" class="Xed">' + obj.rules[id].reference.attrTitle + '</div></div>' +
         '<div id="' + id + '" class="Xed get-type-xed " style="border: 0px solid sandybrown">' +
         '' +
         '</div>' +
         '<div id="' + id + '" class="Xed get-parent-xed "></div>' +
+        '' +
         '</div></div>');
     /**
      * todo: Attribute matris datası ile ooluşturulacak  elemntlerin eklenmesi gereken kısım
@@ -167,34 +237,51 @@ var show_detail = function (id) {
      */
     let parents = parentsDomGenerator(id); //elementin ailesi ve en iyi crawl seçeniği
     $('#' + id + '.get-parent-xed').append(parents.data);
-    $('#' + id + '.get-type-xed').append(getType(dom, id)); // elementin çekilebilecek attributleri
+    let dom_target = $('#' + id + '.XedInnerElement');
+    $('#' + id + '.get-type-xed').append(getType(dom_target, id)); // elementin çekilebilecek attributl eri
     $('#' + id + '-' + parents.best.count).css('border', '2px solid sandybrown');
     $('#' + id + '.XedSelectbox').val(parents.best.class);
-
-
+    $('#reference.get-attr-reff-xed').html(attrList(id));
+    let confirm_button = '<button class="Xed XedConfirmRule" id="' + id + '">Check Rule </button>';
+    $('#confirmation.Xed').html(confirm_button);
+    reVisit(id);
 };
 
+var reVisit = function (id) {
+    /**
+     * daha önce girdi var ı yokmu kontrol ve yeniden işeleme
+     */
+    if(obj.rules[id].get !== []){
+        for(let x of obj.rules[id].get){
+            $('#'+id+'.'+x).prop('checked','true');
+        }
+    }
+
+    if(obj.rules[id].reference.attrID !== null){
+        $('#reffattr-text.Xed').text(obj.rules[id].reference.attrTitle);
+    }
+};
 /**
  * Çekilmek sitenen elementin ailesini döndürür.
  * @param id
  * @returns {Array}
  */
 var getParent = function (id) {
-    console.log(id);
+    // console.log(id);
     var parents = [];
     var par = $('#' + id + '.XedInnerElement').parents()
 
         .map(function () {
             return {tag: this.tagName, id: this.id, class: this.className};
         });
-    console.log(par);
+    // console.log(par);
     for (let x = 0; x < par.length; x++) {
         var t = {tag: par[x].tag, class: par[x].class, id: par[x].id};
         parents.push(t);
 
     }
     // console.log(types);
-    console.log(parents);
+    // console.log(parents);
     return parents;
     // console.log(JSON.stringify(par));
 };
@@ -245,7 +332,7 @@ var parentsDomGenerator = function (id) {
             let count2 = countGenerator(i.tag.toLowerCase(), i.id, x);
             if (count2 === 1) {
                 bestoption = {tag: i.tag.toLowerCase(), id: i.id, class: x, count: co};
-                console.log(bestoption);
+                // console.log(bestoption);
                 exit = true;
                 break;
             }
@@ -315,33 +402,52 @@ var countGenerator = function (tag, id, Class) {
  */
 var getType = function (domm, id) {
     let dom = domm.parent();
-    console.log('node: ' + dom.get(0).nodeName);
+    // console.log('node: ' + dom.get(0).nodeName);
     let str = '';
-    str += '<div class="Xed Xedinside" style="display: flex; justify-content: space-around; padding:20px;">';
+    str += '<div class="Xed Xedinside" style="display: block; float: right; padding:20px;">';
     if (dom.attr('href')) {
         str += '<div><span class="Xed Xedinside XedGetTypeHref" id="' + id + '">Href:</span>' +
-            '<input type="checkbox" id="' + id + '" class="Xed Xedinside XedHrefcheckbox XedgetType" value="href"></div>';
+            '<input type="checkbox" id="' + id + '" class="Xed Xedinside XedHrefcheckbox XedgetType href" value="href"></div>';
     }
     if (dom.attr('src')) {
         str += '<div><span class="Xed Xedinside XedGetTypeSrc" id="' + id + '">Src:</span>' +
-            '<input type="checkbox" id="' + id + '" class="Xedinside XedScrcheckbox XedgetType" value="src"></div>';
+            '<input type="checkbox" id="' + id + '" class="Xedinside XedScrcheckbox XedgetType src" value="src"></div>';
     }
 
     str += '<div><span class="Xed Xedinside XedGetTypeText" id="' + id + '">Text:</span>' +
-        '<input type="checkbox" id="' + id + '" class="Xed Xedinside XedTextcheckbox XedgetType" value="text"></div>';
+        '<input type="checkbox" id="' + id + '" class="Xed Xedinside XedTextcheckbox XedgetType text" value="text"></div>';
     str += '</div>';
     return str;
 };
 
-/**
- * parametre  aldığı aray içerisinden active elementlerin idlerini çeker.
- * 1. getType: 1 elementen çıkacak kural sayısını belirler
- * 2. bestoption
- * 3. children
- *
- * @param active
- */
-var rulesGenerator = function (active) {
+
+var checkRule = function (id) {
+
+    let obj = window.obj.rules[id];
+    console.log(obj);
+    if (obj.target == null) {
+        console.log('no target');
+        return false;
+    }
+    if (obj.get == null || obj.get === []) {
+        console.log('no get');
+        return false;
+    }
+    if (obj.attribute == null) {
+        console.log('no attribute//class//id');
+        alert('no attribute//class//id');
+        //todo: onaylama al
+        return true;
+    }
+    if (obj.children == null) {
+        console.log('no children');
+        return true;
+    }
+    if (obj.reference.attrID == null && obj.reference.newAttr == null) {
+        console.log('no reference');
+        return false;
+    }
+    return true;
 
 
 };
