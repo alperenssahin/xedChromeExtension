@@ -32,8 +32,8 @@
         "http://*/*",
         "https://*/*"
       ],
-      "js": ["jquery-3.3.1.min.js","control.js","content.js","selector.js"],
-      "css": ["style.css"],
+      "js": ["content/jquery-3.3.1.min.js","content/control.js","content/content.js","content/selector.js"],
+      "css": ["content/style.css"],
       "run_at": "document_end"
     }
   ],
