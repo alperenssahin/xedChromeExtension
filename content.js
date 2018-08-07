@@ -75,7 +75,8 @@ $(document).mousemove(function (e) {
  * Attribute select list basar
  */
 var attrList = function (id) {
-    let str = '<select class="Xed Xedattr XedSelect" id="' + id + '">';
+    let str = '<select class="Xed Xedattr XedSelect" id="' + id + '">' +
+        '<option>-</option>';
     let attr = cReff.category.attributes;
     for (let x in attr) {
         let atr = attr[x];
