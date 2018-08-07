@@ -237,7 +237,8 @@ var show_detail = function (id) {
      *
      */
     let parents = parentsDomGenerator(id); //elementin ailesi ve en iyi crawl seçeniği
-    $('#' + id + '.get-parent-xed').append(parents.data);
+    // $('#' + id + '.get-parent-xed').append(parents.data);
+    updateRule(id);
     let dom_target = $('#' + id + '.XedInnerElement');
     $('#' + id + '.get-type-xed').append(getType(dom_target, id)); // elementin çekilebilecek attributl eri
     $('#' + id + '-' + parents.best.count).css('border', '2px solid sandybrown');
@@ -247,6 +248,20 @@ var show_detail = function (id) {
     $('#confirmation.Xed').html(confirm_button);
     reVisit(id);
 };
+var updateRule = function(id){
+      let parents = parentsDomGenerator(id); //elementin ailesi ve en iyi crawl seçeniği
+    // $('#' + id + '.get-parent-xed').append(parents.data);
+    obj.rules[id].target = parents.best.tag;
+    obj.rules[id].attribute = {class:parents.best.class,id:parents.best.id};
+    let par = getParent(id);
+        let children = [];
+
+
+        for (let i = 0; i < parents.best.row; i++) {
+            children.push(par[i].tag.toLowerCase());
+        }
+        obj.rules[id].children = children;
+}
 
 var reVisit = function (id) {
     /**
@@ -319,7 +334,9 @@ var parentsDomGenerator = function (id) {
     //     break;
     // }
     let co = 0;
+    let par = 0;
     for (let i of parents) {
+        par++;
         if (i.class === '' && i.id === '') {
             co++;
             continue;
@@ -331,8 +348,8 @@ var parentsDomGenerator = function (id) {
                 continue;
             }
             let count2 = countGenerator(i.tag.toLowerCase(), i.id, x);
-            if (count2 === 1) {
-                bestoption = {tag: i.tag.toLowerCase(), id: i.id, class: x, count: co};
+            if (count2 >= 1 && count2 <=100) {
+                bestoption = {tag: i.tag.toLowerCase(), id: i.id, class: x, count: co,row:par};
                 // console.log(bestoption);
                 exit = true;
                 break;
