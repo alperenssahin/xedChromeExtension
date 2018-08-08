@@ -55,7 +55,7 @@ tr:nth-child(even) {
 }
  #right.XedInside{
      padding: 5px;
-
+    display: flex;
 
  }
  #left.XedInside{
@@ -85,3 +85,14 @@ tr:nth-child(even) {
     font-size: 12px;
     min-width: 25%;
 }
+
+    /*
+//////inside//////
+ */
+.XedActivated{
+    border: 1px solid olivedrab;
+}
+.XedActive.XedActivated{
+    border: 2px solid palevioletred;
+}
+

@@ -2,11 +2,7 @@
  * local storage
  * @type {string}
  */
-let url = window.location.href;
-var obj = {url: url, rules: {}};
-var trig = false;
-var lastdom;
-var lastactivated;
+
 var cReff = {};
 var crawl = false;
 chrome.runtime.onMessage.addListener(
@@ -36,39 +32,6 @@ $(document).mouseup(function (ev) {
     }
 });
 
-$(document).keypress(function (ev) {
-    if ($('#ctrl.Xedcrawlcontroller').prop('checked')) {
-        //use lastdom ...
-        if (!window.lastdom.hasClass('Xed') && (String.fromCharCode(ev.which) === 'x' || String.fromCharCode(ev.which) === 'X')) {
-            activeDom(window.lastdom);
-            window.lastactivated = window.lastdom;
-        }
-        if (!window.lastdom.hasClass('Xed') && (String.fromCharCode(ev.which) === 'd' || String.fromCharCode(ev.which) === 'D')) {
-            let Id = window.lastdom.attr('data-xed');
-            if (Id != undefined) {
-
-                show_detail(Id);
-            }
-
-            window.lastactivated = window.lastdom;
-        }
-        $('.XedConfirmRule').click(function () {
-            // alert('a');
-            let id = $(this).get(0).id;
-            checkRule(id);
-        });
-        // console.log();
-    }
-});
-$(document).keydown(function () {
-    window.trig = true;
-});
-$(document).keyup(function () {
-    window.trig = false;
-});
-$(document).mousemove(function (e) {
-    window.lastdom = $(e.target);
-});
 
 
 /**
