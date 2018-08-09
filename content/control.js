@@ -1,7 +1,6 @@
 var globalValues = {
     originType: null,
     lastdom: null,
-
 };
 
 
@@ -25,7 +24,8 @@ $(document).ready(function () {
         '<div id="inside" class="Xed XedInside" style="display: flex; justify-content: space-between;">' +
         '<div id="left" class="Xed XedInside"><strong>Crawl:</strong><input type="checkbox" id="ctrl" class="Xed Xedcrawlcontroller"></div>' +
         '<div id="right" class="Xed XedInside">' +
-        '<div id="origin" class="Xed">' +
+        '<div class="Xed XedGetType" id="toprightGetType"></div>' +
+       '<div id="origin" class="Xed">' +
         '<label class="Xed">Unique</label><input type="radio" id="unique" name="XedOrigin" value="unique" class="Xed XedOrigin">' +
         '<label class="Xed">Recurrent</label><input type="radio" id="recurrent" name="XedOrigin" value="recurrent" class="Xed XedOrigin">' +
         '</div>' +

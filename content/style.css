@@ -1,15 +1,16 @@
-.XedPop-up{
+.XedPop-up {
 
-     /*width: 20px;*/
-     /*height: 20px;*/
-     /*background: brown;*/
-     /*position: absolute;*/
-     /*border-bottom-left-radius: 10px;*/
+    /*width: 20px;*/
+    /*height: 20px;*/
+    /*background: brown;*/
+    /*position: absolute;*/
+    /*border-bottom-left-radius: 10px;*/
     /*border-bottom-right-radius: 10px;*/
     /*z-index: 10000;*/
 
- }
-.pop-up-inside{
+}
+
+.pop-up-inside {
     /*font-size: small;*/
     /*width: max-content;*/
     /*height: 400px;*/
@@ -22,6 +23,7 @@
     /*border-radius: 10px;*/
     /*z-index: 9999;*/
 }
+
 table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
@@ -39,60 +41,79 @@ tr:nth-child(even) {
     background-color: rgba(221, 221, 221, 0.57);
 }
 
-
 /*control.js*/
-#container.XedTop{
+#container.XedTop {
     position: sticky;
-    top:0px;
+    top: 0px;
     z-index: 999999;
     overflow: scroll;
     max-height: 250px;
     border-bottom: 5px solid rgba(21, 21, 21, 0.85);
 }
 
-.XedTop{
+.XedTop {
     background-color: #ffce58;
 }
- #right.XedInside{
-     padding: 5px;
+
+#right.XedInside {
+    padding: 5px;
     display: flex;
 
- }
- #left.XedInside{
-     padding: 5px;
 
- }
-
- #panel.XedControl{
-     width: 100%;
-     min-height: 150px;
-     background-color: #fff4d2;
-
- }
- #toggle.Xed{
-     cursor: pointer;
- }
-#currentUrl.Xed{
 
 }
-#right.Xedpanel{
+
+#left.XedInside {
+    padding: 5px;
+
+}
+
+#panel.XedControl {
+    width: 100%;
+    min-height: 150px;
+    background-color: #fff4d2;
+
+}
+
+#toggle.Xed {
+    cursor: pointer;
+}
+
+#currentUrl.Xed {
+
+}
+
+#right.Xedpanel {
     padding-right: 10px;
     font-size: 12px;
     width: 100%;
 }
-#left.Xedpanel{
+
+#left.Xedpanel {
     padding-left: 10px;
     font-size: 12px;
     min-width: 25%;
 }
 
-    /*
+/*
 //////inside//////
- */
-.XedActivated{
+*/
+.XedActivated {
     border: 1px solid olivedrab;
 }
-.XedActive.XedActivated{
+
+.XedActive.XedActivated {
     border: 2px solid palevioletred;
 }
 
+.XedUpLayer{
+    background-color: rgba(165, 42, 42, 0.25);
+}
+
+.XedDownLayer{
+    border: 2px solid #ffae12;
+}
+.XedDownLayer.XedDownLayerSelected{
+    border: 2px solid #341aff;
+    color:red;
+}
