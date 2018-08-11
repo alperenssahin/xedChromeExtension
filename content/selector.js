@@ -14,6 +14,7 @@ $(document).keypress(function (ev) {
                 elevator.unselectDownlayer(Down);
                 elevator.toDeactivate();
                 selector.remove(dom);
+                $('#toprightGetType').html('');
             }
         }
         if (!dom.hasClass('Xed') && (String.fromCharCode(ev.which) === 'e' || String.fromCharCode(ev.which) === 'E')) {
@@ -35,27 +36,21 @@ $(document).keypress(function (ev) {
                     elevator.unselectDownlayer(dom);
 
                 }
-                //todo:f tusu aptal aptal hata veriyor, f tusu get type taşımıyor
             }
         }
         if (!dom.hasClass('Xed') && (String.fromCharCode(ev.which) === 'f' || String.fromCharCode(ev.which) === 'F')) {
             let Id = dom.attr('data-xed');
-            if (Id != undefined) {
+            if (Id != undefined) {//todo: get type data not works for active typex, elevator selektor için de
                 elevator.toDeactivate();
                 domControl.focusOn(dom);
-                if (obj.rules[Id] !== null) {
+                $('#toprightGetType').html(getData.attrGenerator());
+                getData.checkType(Id);
+                getData.checkOrigin(Id);
+                if (obj.rules[Id].elevator !== null) {
                     elevator.toActivate();
                 }
             }
         }
-        $('.XedConfirmRule').click(function () {
-            // alert('a');
-            let id = $(this).get(0).id;
-            checkRule(id);
-        });
-
-
-        // console.log();
     }
 });
 
@@ -68,17 +63,24 @@ $(document).mousemove(function (e) {
 
 $(document).ready(function () {
     Xed.events.originTypeChange();
+    Xed.events.getTypeChange();
+
+    Xed.events.referenceSignal();
+    Xed.events.crawlController();
 });
 
 
-var rule = {
-    originType: null,
-    path: null,
-    text: null,
-    get: [],
-    elevator: false,
-    reference: {},
-};
+// var rule = {
+//     originType: null,
+//     path: null,
+//     text: null,
+//     get: [],
+//     elevator: false,
+//     reference: {},
+// };
+
+// var reference = {newType: null, attrID: null, attrTitle: null, newAttr: null};
+
 
 var selector = {
     create: function (dom) {
@@ -88,6 +90,8 @@ var selector = {
         domControl.toActivate(dom, id); //activate on html and sign element
         f_rule.path = parthGenerator.getParent(id);
         f_rule.elevator = null;
+        f_rule.get = null;
+        f_rule.reference = {};
         f_rule.text = dom.text();
         obj.rules[id] = f_rule; //add to global rule
 
@@ -133,7 +137,7 @@ var elevator = {
         dom.removeClass('XedDownLayerSelected');
         // let domm = this.getActiveElementByParent(dom);
         let id = $('.XedActive').attr('data-xed');
-        if(id == undefined) return;
+        if (id == undefined) return;
         obj.rules[id].elevator = null;
     },
     addChildrenClass: function (dom) {
@@ -197,6 +201,10 @@ var Xed = {
         return $("[data-xed = '" + id + "']");
 
     },
+    getActiveID: function () {
+        return $('.XedActive').attr('data-xed');
+    }
+    ,
     events: {
         originTypeChange: function () {
             $('.XedOrigin').change(function () {
@@ -209,6 +217,43 @@ var Xed = {
                 }
             });
         },
+        getTypeChange: function () {
+            $('.XedGetType').change(function () {
+                let type = [];
+                let dom = $('.XedGetType');
+                dom.each(function () {
+                    if ($(this).prop('checked')) {
+                        type.push($(this).val());
+                    }
+                });
+                let id = Xed.getActiveID();
+                obj.rules[id].get = type;
+            });
+        },
+        referenceSignal: function () {
+            chrome.runtime.onMessage.addListener(
+                function (request) {
+                    if (request.key == "reference") {
+                        globalValues.cReff = request.data;
+                        globalValues.crawl = true;
+                    }
+                });
+        },
+        crawlController: function () {
+            $('#ctrl.Xedcrawlcontroller').mouseup(function (ev) {
+                let dom = $(ev.target);
+                if (dom.hasClass('Xedcrawlcontroller')) {
+
+                    if (globalValues.crawl) {
+                        // console.log('gogogo');
+                        return;
+                    } else {
+                        console.log('attributes not initialised');
+                        $('#ctrl.Xedcrawlcontroller').prop('checked', true);
+                    }
+                }
+            });
+        }
 
     },
 
@@ -271,32 +316,51 @@ var parthGenerator = {
                 }
             }
 
-            if(con) continue;
+            if (con) continue;
             arr.push(clas);
         }
         return arr;
     },
-    classDeter : ['Xed'],
+    classDeter: ['Xed'],
 };
 
 var getData = {
-  getAttributes:function () {
-      let attr = $('.XedActive').get(0).attributes;
-      let attrList = [];
-      for (let i = 0; i<attr.length; i++){
-          attrList.push(attr[i].name);
-      }
-      return attrList;
-  },
-  attrGenerator:function () {
-      let attr = this.getAttributes();
-      // console.log(attr);
-      let str = '';
-        for(let a of attr){
-           let tmp ='<label>'+a+'</label><input type="checkbox" name="'+a+'" id="'+a+'" class="Xed XedGetType" value="'+a+'">';
+    getAttributes: function () {
+        let attr = $('.XedActive').get(0).attributes;
+        let attrList = [];
+        for (let i = 0; i < attr.length; i++) {
+            attrList.push(attr[i].name);
+        }
+        return attrList;
+    },
+    attrGenerator: function () {
+        let attr = this.getAttributes();
+        // console.log(attr);
+        // let li = ['class', 'data-xed', 'id', 'name', 'type', 'value'];
+        let str = '<label>text</label><input type="checkbox" name="text" id="text" class="Xed XedGetType" value="text">';
+        for (let a of attr) {
+            // if (li.indexOf(a) === (-1)) continue;
+            let tmp = '<label>' + a + '</label><input type="checkbox" name="' + a + '" id="' + a + '" class="Xed XedGetType" value="' + a + '">';
             str += tmp;
         }
         return str;
 
-  }
+    },
+    checkType: function (id) {
+        let type = obj.rules[id].get;
+        if (type != null) {
+            for (let x of type) {
+                $('#' + x + '.XedGetType').prop('checked', true);
+            }
+        }
+    },
+    checkOrigin: function (id) {
+        let orgi = obj.rules[id].originType;
+        if (orgi === 'unique') {
+            $('#unique.XedOrigin').prop('checked', true);
+        }
+        if (orgi === 'recurrent') {
+            $('#recurrent.XedOrigin').prop('checked', true);
+        }
+    }
 };

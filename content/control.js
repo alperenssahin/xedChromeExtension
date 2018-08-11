@@ -1,6 +1,8 @@
 var globalValues = {
     originType: null,
     lastdom: null,
+    cReff:null,
+    crawl:null,
 };
 
 
@@ -71,26 +73,27 @@ $(document).ready(function () {
         function (request, sender, sendResponse) {
 
             if (request.greeting == "rules") {
-                let conn = true;
-                let co = 0;
-                for (let x in  obj.rules) {
-                    co++;
-                    if (checkRule(x)) {
-
-                    }
-                    else {
-                        conn = false;
-                        console.log(x + ': Eksik Kural');
-                        console.log(obj.rules[x]);
-                    }
-                }
-                if (conn && co >= 1) {
-                    sendResponse({data: obj, error: 0});
-
-                } else {
-                    sendResponse({data: obj, error: 1});
-
-                }
+                // let conn = true;
+                // let co = 0;
+                // for (let x in  obj.rules) {
+                //     co++;
+                //     if (checkRule(x)) {
+                //
+                //     }
+                //     else {
+                //         conn = false;
+                //         console.log(x + ': Eksik Kural');
+                //         console.log(obj.rules[x]);
+                //     }
+                // }
+                // if (conn && co >= 1) {
+                //     sendResponse({data: obj, error: 0});
+                //
+                // } else {
+                //     sendResponse({data: obj, error: 1});
+                //
+                // }
+                sendResponse({data: obj, error: 0});
             }
 
         });

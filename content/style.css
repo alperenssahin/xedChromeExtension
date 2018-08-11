@@ -58,21 +58,18 @@ tr:nth-child(even) {
 #right.XedInside {
     padding: 5px;
     display: flex;
-
-
-
+    width: 50%;
+    justify-content: space-between;
 }
 
 #left.XedInside {
     padding: 5px;
-
 }
 
 #panel.XedControl {
     width: 100%;
     min-height: 150px;
     background-color: #fff4d2;
-
 }
 
 #toggle.Xed {
