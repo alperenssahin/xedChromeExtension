@@ -1,8 +1,12 @@
+//liten keypress event and eleminate different input value
+
 $(document).keypress(function (ev) {
     if ($('#ctrl.Xedcrawlcontroller').prop('checked')) {
         //use lastdom ...
-        console.log(obj);
+        // console.log(obj);
+        //get current element that we receive from mouse position
         let dom = globalValues.lastdom;
+        //create active element, unique ıd in lastdom element, remove selected element from rule object
         if (!dom.hasClass('Xed') && (String.fromCharCode(ev.which) === 'x' || String.fromCharCode(ev.which) === 'X')) {
             if (!Xed.isActivated(dom)) {
                 elevator.toDeactivate();
@@ -17,6 +21,7 @@ $(document).keypress(function (ev) {
                 $('#toprightGetType').html('');
             }
         }
+        //decide elevator element to see elements who is in same layer with element
         if (!dom.hasClass('Xed') && (String.fromCharCode(ev.which) === 'e' || String.fromCharCode(ev.which) === 'E')) {
             if (Xed.isActivated(dom)) {
                 if (!Xed.isCenter(dom)) {
@@ -28,6 +33,7 @@ $(document).keypress(function (ev) {
                 }
             }
         }
+        //select elements who are on sublayer of elevator element
         if (!dom.hasClass('Xed') && (String.fromCharCode(ev.which) === 's' || String.fromCharCode(ev.which) === 'S')) {
             if (dom.hasClass('XedDownLayer')) {
                 if (!dom.hasClass('XedDownLayerSelected')) {
@@ -38,9 +44,10 @@ $(document).keypress(function (ev) {
                 }
             }
         }
+        //change your focused element between the active elements
         if (!dom.hasClass('Xed') && (String.fromCharCode(ev.which) === 'f' || String.fromCharCode(ev.which) === 'F')) {
             let Id = dom.attr('data-xed');
-            if (Id != undefined) {//todo: get type data not works for active typex, elevator selektor için de
+            if (Id != undefined) {
                 elevator.toDeactivate();
                 domControl.focusOn(dom);
                 $('#toprightGetType').html(getData.attrGenerator());
@@ -56,11 +63,11 @@ $(document).keypress(function (ev) {
 
 //temel selector kontrol değişkenleri
 
-
+//target lastdom on page
 $(document).mousemove(function (e) {
     globalValues.lastdom = $(e.target);
 });
-
+//call events
 $(document).ready(function () {
     Xed.events.originTypeChange();
     Xed.events.getTypeChange();
@@ -100,10 +107,10 @@ var selector = {
     update: function () {
         let id = $('.XedActive').attr('data-xed');
         let rule = obj.rules[id];
-        rule.originType = globalValues.originType;
+        rule.originType = globalValues.originType; //update originType
         // rule.elevator = globalValues.elevator;
     },
-    remove: function (dom) {
+    remove: function (dom) { // destroy element
         let id = dom.attr('data-xed');
         delete obj.rules[id];
         domControl.toDeactivate(dom);
