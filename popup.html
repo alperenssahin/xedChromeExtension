@@ -7,13 +7,12 @@
         body {
             margin: 0px;
         }
-        .inactive{
-            display: none;
-        }
+
         #top.header {
             width: 100%;
             height: 30px;
             background-image: linear-gradient(to right, #009a9c, #0eccc7);
+            margin-top: 7px;
 
         }
 
@@ -22,6 +21,10 @@
             justify-content: space-between;
             margin-left: 8px;
             margin-right: 8px;
+        }
+
+        .inactive {
+            display: none;
         }
 
         #logo.header {
@@ -149,14 +152,16 @@
 </head>
 <body>
 <div id="top" class="header">
-    <div class="header" id="container">
-        <div class="header" id="logo">
-            <div class="logo" id="image"></div>
-            <div class="logo" id="text"><strong>Xed</strong>Crawler</div>
-        </div>
-        <div class="header" id="settings"><i class="material-icons">
+    <div id="container-up" class="header inactive">
+        <div id="container" class="header">
+            <div id="logo" class="header">
+                <div id="image" class="logo"></div>
+                <div id="text" class="logo"><strong>Xed</strong>Crawler</div>
+            </div>
+            <div id="settings" class="header"><span id="settings" class="header"><i class="material-icons">
             settings
-        </i></div>
+        </i></span></div>
+        </div>
     </div>
 </div>
 <div id="container" class="container">
