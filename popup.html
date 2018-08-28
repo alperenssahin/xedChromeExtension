@@ -1,60 +1,209 @@
 <!DOCTYPE html>
 <html>
-  <head>
-
+<head>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
     <style>
-      button {
-        height: 30px;
-        width: 30px;
-        outline: none;
-      }
+        body {
+            margin: 0px;
+        }
+        .inactive{
+            display: none;
+        }
+        #top.header {
+            width: 100%;
+            height: 30px;
+            background-image: linear-gradient(to right, #009a9c, #0eccc7);
 
-      body{
-        padding: 10px;
-      }
-      div{
-        border: 1px solid rebeccapurple;
-      }
-      #container{
-        width: 200px;
-        height: 600px;
-      }
-      #logo{
+        }
 
-        margin:auto;
-        width: 100px;
-        height: 100px;
-        background-image: url("/images/xed128.png");
-        background-size: contain;
-        background-repeat: no-repeat;
-      }
-      #get-ref{
-        width: 100%;
-      }
-      #get-rules{
-        width: 100%;
-      }
-        #Cat-ID{
+        #container.header {
+            display: flex;
+            justify-content: space-between;
+            margin-left: 8px;
+            margin-right: 8px;
+        }
+
+        #logo.header {
+            display: flex;
+        }
+
+        #image.logo {
+            background-image: url("images/white48.png");
+            background-size: cover;
+            height: 30px;
+            width: 30px;
+        }
+
+        #text.logo {
+            color: #ffffff;
+            margin: auto;
+            margin-left: 2px;
+        }
+
+        #container.container {
+            margin: 8px 16px 0px 16px;
+            width: 210px;
+            max-height: 400px;
+            overflow: scroll;
+
+        }
+
+        #logo.authentication {
+            margin: auto;
+            width: 100px;
+            height: 100px;
+            background-image: url("/images/xed128.png");
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        #settings.header {
+            width: 22px;
+            height: 22px;
+            color: white;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .header .material-icons {
+            font-size: 22px;
+        }
+
+        #inside.container {
+            margin-top: 8px;
+        }
+
+        #email.authentication {
+            margin-top: 8px;
+        }
+
+        .authentication.input {
+            width: 100%;
+            outline: none;
+            border: none;
+            border-bottom: 2px solid #009a9c;
+            height: 30px;
+            transition: 0.5s;
+        }
+
+        .authentication.input:focus {
+            border-bottom: 2px solid #0eccc7;
+            border-left: 5px solid #009a9c;
+        }
+
+        #bottom.authentication {
+            margin-top: 16px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .authentication.link {
+            text-decoration-line: none;
+            margin-top: auto;
+            margin-bottom: auto;
+            color: #0eccc7;
+        }
+
+        .authentication.link:hover {
+            text-decoration-line: underline;
+        }
+
+        #send.authentication {
+            width: 40%;
+            height: 30px;
+            border-radius: 8px;
+            background: #0f919c;
+            outline: none;
+            color: whitesmoke;
+        }
+
+        #send.authentication:hover {
+            background: #0eccc7;
+        }
+
+        #get-ref {
             width: 100%;
         }
+
+        #get-rules {
+            width: 100%;
+        }
+
+        #Cat-ID {
+            width: 100%;
+        }
+
+        #copyright {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            color: #9f9f9f;
+        }
+
+        p#copyright {
+            margin: 0px;
+        }
     </style>
-  </head>
-  <body>
-  <div id="container">
-    <div id="logo"></div>
-    <div id="inside">
-      <div id="setup-box" style="display: block;">
-        <div id="response" style="text-justify: auto;"></div>
-        <button id="get-ref">Get Reference Attributes</button>
-         <button id="get-rules">Rules Passing to Server</button>
-      </div>
-      <div id="result-box">
-
-      </div>
+</head>
+<body>
+<div id="top" class="header">
+    <div class="header" id="container">
+        <div class="header" id="logo">
+            <div class="logo" id="image"></div>
+            <div class="logo" id="text"><strong>Xed</strong>Crawler</div>
+        </div>
+        <div class="header" id="settings"><i class="material-icons">
+            settings
+        </i></div>
     </div>
-  </div>
-     <script src="content/jquery-3.3.1.min.js"></script>
-    <script src="popup.js"></script>
+</div>
+<div id="container" class="container">
+    <div class="authentication active" id="container-up">
+        <div id="logo" class="authentication"></div>
+        <div id="inside" class="container">
+            <div id="container" class="authentication">
+                <div id="inside" class="authentication">
+                    <strong>Log in to XedCrawler</strong>
+                    <input type="email" id="email" class="authentication input" name="email" placeholder="E-mail">
+                    <input type="password" id="passwd" class="authentication input" name="passwd"
+                           placeholder="Password">
+                    <div id="bottom" class="authentication">
+                        <a href="http://localhost" class="authentication link">Forgot password?</a>
+                        <button id="send" class="authentication">Log in</button>
 
-  </body>
+                    </div>
+                    <p>Visit <a href="http://localhost" class="authentication link">Xedzone</a> to learn more solution.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="container" class="operation inactive">
+        <div id="status" class="operation inside"></div>
+        <div id="manage" class="operation inside"></div>
+        <div id="reference" class="operation inside"></div>
+        <div id="recent-operation" class="operation inside"></div>
+    </div>
+    <div id="container" class="setup inactive">
+        <div class="setup" id="operation-type"></div>
+        <div class="setup" id="reference-recurrent"></div>
+        <div class="setup" id="start"></div>
+    </div>
+    <div id="container" class="settings inactive">
+        <div id="acount" class="settings"></div>
+        <div id="feedback" class="settings"></div>
+    </div>
+</div>
+<div id="copyright"><p id="copyright">&#9400;Xedzone</p></div>
+<script src="content/jquery-3.3.1.min.js"></script>
+<script src="popup.js"></script>
+
+</body>
 </html>
+<div id="setup-box" style="display: none;">
+    <div id="response" style="text-justify: auto;"></div>
+    <button id="get-ref">Get Reference Attributes</button>
+    <button id="get-rules">Rules Passing to Server</button>
+</div>
