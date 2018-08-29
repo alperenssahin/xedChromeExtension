@@ -3,162 +3,21 @@
 <head>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
+    <link href="pop-upJs/style.css"
+          rel="stylesheet">
     <style>
-        body {
-            margin: 0px;
-        }
 
-        #top.header {
-            width: 100%;
-            height: 30px;
-            background-image: linear-gradient(to right, #009a9c, #0eccc7);
-            margin-top: 7px;
-
-        }
-
-        #container.header {
-            display: flex;
-            justify-content: space-between;
-            margin-left: 8px;
-            margin-right: 8px;
-        }
-
-        .inactive {
-            display: none;
-        }
-
-        #logo.header {
-            display: flex;
-        }
-
-        #image.logo {
-            background-image: url("images/white48.png");
-            background-size: cover;
-            height: 30px;
-            width: 30px;
-        }
-
-        #text.logo {
-            color: #ffffff;
-            margin: auto;
-            margin-left: 2px;
-        }
-
-        #container.container {
-            margin: 8px 16px 0px 16px;
-            width: 210px;
-            max-height: 400px;
-            overflow: scroll;
-
-        }
-
-        #logo.authentication {
-            margin: auto;
-            width: 100px;
-            height: 100px;
-            background-image: url("/images/xed128.png");
-            background-size: contain;
-            background-repeat: no-repeat;
-        }
-
-        #settings.header {
-            width: 22px;
-            height: 22px;
-            color: white;
-            margin-top: auto;
-            margin-bottom: auto;
-        }
-
-        .header .material-icons {
-            font-size: 22px;
-        }
-
-        #inside.container {
-            margin-top: 8px;
-        }
-
-        #email.authentication {
-            margin-top: 8px;
-        }
-
-        .authentication.input {
-            width: 100%;
-            outline: none;
-            border: none;
-            border-bottom: 2px solid #009a9c;
-            height: 30px;
-            transition: 0.5s;
-        }
-
-        .authentication.input:focus {
-            border-bottom: 2px solid #0eccc7;
-            border-left: 5px solid #009a9c;
-        }
-
-        #bottom.authentication {
-            margin-top: 16px;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .authentication.link {
-            text-decoration-line: none;
-            margin-top: auto;
-            margin-bottom: auto;
-            color: #0eccc7;
-        }
-
-        .authentication.link:hover {
-            text-decoration-line: underline;
-        }
-
-        #send.authentication {
-            width: 40%;
-            height: 30px;
-            border-radius: 8px;
-            background: #0f919c;
-            outline: none;
-            color: whitesmoke;
-        }
-
-        #send.authentication:hover {
-            background: #0eccc7;
-        }
-
-        #get-ref {
-            width: 100%;
-        }
-
-        #get-rules {
-            width: 100%;
-        }
-
-        #Cat-ID {
-            width: 100%;
-        }
-
-        #copyright {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            color: #9f9f9f;
-        }
-
-        p#copyright {
-            margin: 0px;
-        }
     </style>
 </head>
 <body>
 <div id="top" class="header">
-    <div id="container-up" class="header inactive">
+    <div id="container-up" class="header active">
         <div id="container" class="header">
             <div id="logo" class="header">
                 <div id="image" class="logo"></div>
                 <div id="text" class="logo"><strong>Xed</strong>Crawler</div>
             </div>
-            <div id="settings" class="header"><span id="settings" class="header"><i class="material-icons">
+            <div id="settings" class="header"><span id="settings" class="header button"><i class="material-icons">
             settings
         </i></span></div>
         </div>
@@ -192,16 +51,46 @@
         <div id="recent-operation" class="operation inside"></div>
     </div>
     <div id="container" class="setup active">
+        <div class="setup" id="monitor">
+            <strong class="monitor" id="text"></strong>
+        </div>
         <div class="setup" id="operation-type">
-            <input type="radio" name="operation-type" class="setup input checkbox" value="mapping"><strong>Mapping</strong>
-            <input type="radio" name="operation-type" class="setup input checkbox" value="scraping"><strong>Scraping</strong>
+            <div class="operation operation-label-mapping" id="mapping">
+                <div id="mapping" class="operation container label out">
+                    <h4 class="operation setup label innerText" id="mapping">Mapping</h4>
+                </div>
+            </div>
+
+            <div class="operation operation-label-scraping" id="scraping">
+                <div id="scraping" class="operation container label out">
+                    <h4 class="operation setup label innerText" id="scraping">Scraping</h4>
+                </div>
+            </div>
+
         </div>
-        <div class="setup" id="reference-recurrent">
-            <input type="radio" name="ref-rec" class="setup input checkbox" value="reference"><strong>Reference</strong>
-            <input type="radio" name="ref-rec" class="setup input checkbox" value="recurrent"><strong>Recurrent</strong>
+        <div class="info" id="container">
+            <div class="setup info-op mapping inactive">Create a new URL map and connect your scraped rules to this map.</div>
+            <div class="setup info-op scraping inactive">Start marking the elements that you want to scrape</div>
         </div>
-        <div class="setup" id="start">
-            <button>crawl</button>
+        <div class="setup blocked" id="reference-recurrent">
+           <div class="ref-rec ref-rec-label-reference" id="reference">
+                <div id="reference" class="ref-rec container label out">
+                    <h4 class="ref-rec setup label innerText" id="reference">Reference</h4>
+                </div>
+            </div>
+
+            <div class="ref-rec ref-rec-label-recurrent" id="recurrent">
+                <div id="recurrent" class="ref-rec container label out">
+                    <h4 class="ref-rec setup label innerText" id="recurrent">Recurrent</h4>
+                </div>
+            </div>
+        </div>
+        <div class="info" id="container">
+            <div class="setup info-rr recurrent inactive">Mark listed or recurrent elements</div>
+            <div class="setup info-rr reference inactive">Mark elements according to a attribute matrix</div>
+        </div>
+        <div class="setup  startbutton" id="start">
+            <button id="next" class="setup blocked">Next</button>
         </div>
     </div>
     <div id="container" class="settings inactive">
@@ -212,6 +101,7 @@
 <div id="copyright"><p id="copyright">&#9400;Xedzone</p></div>
 <script src="content/jquery-3.3.1.min.js"></script>
 <script src="popup.js"></script>
+<script src="pop-upJs/style.js"></script>
 
 </body>
 </html>
