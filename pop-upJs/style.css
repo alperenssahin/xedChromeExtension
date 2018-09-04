@@ -46,7 +46,7 @@ span.button {
     margin: 8px 16px 0px 16px;
     width: 210px;
     max-height: 400px;
-    overflow: scroll;
+    overflow-y: scroll;
 
 }
 
@@ -229,7 +229,7 @@ div.ref-rec:hover{
     background-color: rgba(0, 212, 203, 0.2);
 }
 
-#next.setup {
+#next.buttonType {
     width: 100%;
     height: 25px;
     border-radius: 2px;
@@ -240,9 +240,53 @@ div.ref-rec:hover{
     margin-top: 8px;
     margin-bottom: 8px;
 }
-#next.setup.blocked{
+#next.blocked.buttonType{
     background-color: #9f9f9f;
 }
-#next.setup:hover {
+#next.buttonType:hover {
     background: #0eccc7;
+}
+
+/*--------------attr-ref---------------*/
+
+#top.attr-ref{
+    border-bottom: 3px solid #009a9c;
+    display: flex;
+    justify-content: space-between;
+}
+.step-back .button .material-icons{
+    font-size: 18px;
+    font-weight: bolder;
+    color:#009a9c;
+}
+.step-back .button .material-icons:hover{
+    color:#0eccc7;
+}
+.opened .material-icons{
+    color: #00616e;
+
+}
+/*----------settings----------*/
+.settings.option.container{
+    width: 100%;
+    height: 25px;
+    border-left: 3px solid #25c4d6;
+    cursor: pointer;
+     color: #363636;
+}
+.settings.option.text{
+    left: 4px;
+    position: relative;
+    bottom: -5px;
+    font-size: 12px;
+    font-weight: bold;
+
+
+}
+
+.settings.option.container:hover{
+    width: 100%;
+    height: 25px;
+    color: white;
+    background-color: #009a9c;
 }

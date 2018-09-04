@@ -10,21 +10,25 @@
     </style>
 </head>
 <body>
+
 <div id="top" class="header">
-    <div id="container-up" class="header active">
+    <div id="container-up" class="header inactive">
         <div id="container" class="header">
             <div id="logo" class="header">
                 <div id="image" class="logo"></div>
                 <div id="text" class="logo"><strong>Xed</strong>Crawler</div>
             </div>
-            <div id="settings" class="header"><span id="settings" class="header button"><i class="material-icons">
+            <div id="settings" class="header"><span id="settings" class="settings header button"><i
+                    class="material-icons">
             settings
         </i></span></div>
         </div>
     </div>
 </div>
+
+
 <div id="container" class="container">
-    <div class="authentication inactive" id="container-up">
+    <div class="authentication active" id="container-up">
         <div id="logo" class="authentication"></div>
         <div id="inside" class="container">
             <div id="container" class="authentication">
@@ -44,13 +48,19 @@
             </div>
         </div>
     </div>
-    <div id="container" class="operation inactive">
-        <div id="status" class="operation inside"></div>
-        <div id="manage" class="operation inside"></div>
-        <div id="reference" class="operation inside"></div>
-        <div id="recent-operation" class="operation inside"></div>
+
+
+    <div id="container" class="general inactive">
+        <div id="status" class="general inside"><div >
+
+        </div></div>
+        <div id="manage" class="general inside"></div>
+        <div id="reference" class="general inside"></div>
+        <div id="recent-operation" class="general inside"></div>
     </div>
-    <div id="container" class="setup active">
+
+
+    <div id="container" class="setup inactive">
         <div class="setup" id="monitor">
             <strong class="monitor" id="text"></strong>
         </div>
@@ -68,18 +78,23 @@
             </div>
 
         </div>
+
         <div class="info" id="container">
-            <div class="setup info-op mapping inactive">Create a new URL map and connect your scraped rules to this map.</div>
+            <div class="setup info-op mapping inactive">Create a new URL map and connect your scraped rules to this
+                map.
+            </div>
             <div class="setup info-op scraping inactive">Start marking the elements that you want to scrape</div>
         </div>
+
+
         <div class="setup blocked" id="reference-recurrent">
-           <div class="ref-rec ref-rec-label-reference" id="reference">
+            <div class="ref-rec ref-rec-label-reference" id="reference">
                 <div id="reference" class="ref-rec container label out">
                     <h4 class="ref-rec setup label innerText" id="reference">Reference</h4>
                 </div>
             </div>
 
-            <div class="ref-rec ref-rec-label-recurrent" id="recurrent">
+            <div class="ref-rec ref-rec-label-recurrent " id="recurrent">
                 <div id="recurrent" class="ref-rec container label out">
                     <h4 class="ref-rec setup label innerText" id="recurrent">Recurrent</h4>
                 </div>
@@ -90,12 +105,40 @@
             <div class="setup info-rr reference inactive">Mark elements according to a attribute matrix</div>
         </div>
         <div class="setup  startbutton" id="start">
-            <button id="next" class="setup blocked">Next</button>
+            <button id="next" class="setup blocked buttonType">Next</button>
         </div>
     </div>
+
+
+    <div id="container" class="attr-ref inactive">
+        <div class="attr-ref" id="top">
+            <div class="attr-ref top step-back" id="step-back"><span class=" attr-ref button"><i class="material-icons">
+arrow_back_ios
+</i></span></div>
+            <div class="attr-ref top" id="text"><strong>Select Reference</strong></div>
+        </div>
+        <div class="attr-ref" id="list"></div>
+        <div class="attr-ref" id="detail"></div>
+        <div class="attr-ref  startbutton" id="start">
+            <button id="next" class="attr-ref blocked buttonType">Next</button>
+        </div>
+    </div>
+
+
     <div id="container" class="settings inactive">
-        <div id="acount" class="settings"></div>
-        <div id="feedback" class="settings"></div>
+        <div id="acount" class="settings up">
+            <div class="settings option container" id="logout">
+                <div class="settings option text">LogOut</div>
+            </div>
+            <div class="settings option container"  id="serverconfig">
+                <div class="settings option text">Server Configuration</div>
+            </div>
+        </div>
+        <div id="feedback" class="settings up">
+            <div class="settings option container">
+                <div class="settings option text">Feedback</div>
+            </div>
+        </div>
     </div>
 </div>
 <div id="copyright"><p id="copyright">&#9400;Xedzone</p></div>
