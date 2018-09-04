@@ -49,21 +49,18 @@ $(document).ready(function () {
         });
     });
 });
+
+var config = {
+    login: false,
+    server: 'http://127.0.0.1:8003',
+    setup: function () {
+        Log.checkLogIn();
+    },
+    user: null,
+}
 var XedCrawler = {
     init: function () {
-        let login = this.checkLogIn();
-        if (login == undefined || login == false) {
-            this.config.login = false;
-        } else {
-            this.config.login = true;
-        }
-        this.config.setup();
-    },
-    checkLogIn: function () {
-        chrome.storage.local.get(['logIn'], function (result) {
-            return result.logIn;
-
-        });
+        config.setup();
     },
     setLogInStatus: function (status) {
         chrome.storage.local.set({logIn: status}, function () {
@@ -73,58 +70,75 @@ var XedCrawler = {
     logOut: function () {
     },
     //configuration general...
-    config: {
-        login: false,
-        server: 'http://127.0.0.1:8003',
-        setup: function () {
-            XedCrawler.authentication.config();
-        },
-        user: null,
-    },
+
 
     authentication: {
         //configuration about authentication...
         config: function () {
-            if (XedCrawler.config.login) {
-                let dom = $('#container.general');
+            console.log('in authentication config.login: ' + config.login);
+            if (config.login) {
                 page.deactivate($('#container-up.authentication'));
-                page.activate(dom);
+                page.activate($('#container.general'));
                 $('#container-up.header').removeClass('inactive');
+
             }
             else {
                 $('#send.authentication').click(function () {
                     //todo:connection request, control response
                     let response = XedCrawler.authentication.request();
 
-                    if (response) {
-                        page.deactivate($('#container-up.authentication'));
-                        page.activate($('#container.general'));
-                        $('#container-up.header').removeClass('inactive');
-                        XedCrawler.setLogInStatus(true);
-
-                    } else {
-                        XedCrawler.setLogInStatus(false);
-                        //todo:affiche error message
-
-                    }
                 });
             }
 
         },
         request: function () {
-            let url = XedCrawler.config.server + '/login';
+            let url = config.server + '/login/';
             console.log('preparing to request-->' + url);
-            let data = {}
+            let data = {
+                "email": $('#email.authentication').val(),
+                "passwd": $('#passwd.authentication').val()
+            }
+            let con = false;
             $.post(url, data, function (data) {
                 let res = JSON.parse(data);
-                //ctrl...
-                return true //todo:create user object on server.
-                //return false...
+                console.log('authentication response--->' + res);
+                if (res == null) {
+                    console.log('request problem');
+                    XedCrawler.authentication.styleTrig(false);
+                } else {
+                    console.log('gogo');
+                    config.user = res;
+                    XedCrawler.authentication.styleTrig(true);
+                }
+                return con;
 
             });
         },
+        styleTrig: function (response) {
+            if (response) {
+                console.log('loginIn')
+                page.deactivate($('#container-up.authentication'));
+                page.activate($('#container.general'));
+                $('#container-up.header').removeClass('inactive');
+                XedCrawler.setLogInStatus(true);
+
+            } else {
+                XedCrawler.setLogInStatus(false);
+                //todo:affiche error message
+
+            }
+        }
     }
 };
-
+var Log = {
+    checkLogIn: function () {
+        let log = null;
+        chrome.storage.local.get(['logIn'], function (result) {
+            console.log('isLogin:' + result.logIn);
+            config.login = result.logIn;
+            XedCrawler.authentication.config();
+        });
+    },
+}
 
 
