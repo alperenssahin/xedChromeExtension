@@ -32,7 +32,7 @@
         "http://*/*",
         "https://*/*"
       ],
-      "js": ["content/jquery-3.3.1.min.js","content/control.js","content/content.js","content/selector.js"],
+      "js": ["content/jquery-3.3.1.min.js","content/control.js","content/selector.js","content/setup.js"],
       "css": ["content/style.css"],
       "run_at": "document_end"
     }

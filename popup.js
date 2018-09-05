@@ -3,30 +3,10 @@
 // $('#get-cat').click(function () {
 $(document).ready(function () {
     XedCrawler.init();
-    $.post('http://127.0.0.1:8003/xedEx/', {setup: 1}, function (data) {
-        console.log(data);
-        var obj = JSON.parse(data);
-
-        let str = '<select class="Xed XedSelect" id="Cat-ID">';
-        for (let x of obj) {
-            str += '<option value="' + x._id.$oid + '">' + x.category.title + '</option>'
-        }
-        str += '</select>';
-        $('#response').html(str);
-    });
 
 
     $('#get-ref').click(function () {
-        $.post('http://127.0.0.1:8003/getReference/', {ID: $('#Cat-ID.XedSelect').val()}, function (data) {
-            var obj = JSON.parse(data);
-            console.log(obj);
-            chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-                chrome.tabs.sendMessage(tabs[0].id, {key: "reference", data: obj}, function (response) {
-                });
-            });
 
-            // console.log(obj);
-        });
 
     });
     $('#get-rules').click(function () {
@@ -49,7 +29,40 @@ $(document).ready(function () {
         });
     });
 });
+var reference = {
+    getReferences:function (dom) {
+        $.post('http://127.0.0.1:8003/xedEx/', {setup: 1}, function (data) {
+        console.log(data);
+        var obj = JSON.parse(data);
 
+        let str = '<select class="Xed XedSelect" id="Cat-ID">';
+        str += '<option value="-"> - </option>';
+        for (let x of obj) {
+            str += '<option value="' + x._id.$oid + '">' + x.category.title + '</option>';
+        }
+        str += '</select>';
+       dom.html(str);
+       events.referenceSelected(); //listen to change on list box
+    });
+
+    },
+    data: function () {
+        $.post('http://127.0.0.1:8003/getReference/', {ID: $('#Cat-ID.XedSelect').val()}, function (data) {
+            var obj = JSON.parse(data);
+            var crawl = {
+                type:"By Reference",
+                data:obj,
+
+            }
+            console.log(obj);
+            chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+                chrome.tabs.sendMessage(tabs[0].id, {key: "start", data: crawl}, function (response) {
+                });
+            });
+            // console.log(obj);
+        });
+    }
+}
 var config = {
     login: false,
     server: 'http://127.0.0.1:8003',
@@ -57,6 +70,7 @@ var config = {
         Log.checkLogIn();
     },
     user: null,
+    operation:false,
 }
 var XedCrawler = {
     init: function () {
@@ -137,6 +151,11 @@ var Log = {
             console.log('isLogin:' + result.logIn);
             config.login = result.logIn;
             XedCrawler.authentication.config();
+        });
+    },setOperatio: function (status) {
+        config.operation = status;
+        chrome.storage.local.set({Operation: status}, function () {
+            console.log('Operation value is set to ' + status);
         });
     },
 }

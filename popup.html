@@ -34,7 +34,8 @@
             <div id="container" class="authentication">
                 <div id="inside" class="authentication">
                     <strong>Log in to XedCrawler</strong>
-                    <input type="email" value="admin@xedzone.com" id="email" class="authentication input" name="email" placeholder="E-mail">
+                    <input type="email" value="admin@xedzone.com" id="email" class="authentication input" name="email"
+                           placeholder="E-mail">
                     <input type="password" value="xedzone" id="passwd" class="authentication input" name="passwd"
                            placeholder="Password">
                     <div id="bottom" class="authentication">
@@ -51,10 +52,15 @@
 
 
     <div id="container" class="general inactive">
-        <div id="status" class="general inside"><div >
+        <div id="status" class="general inside">
+            <div>
 
-        </div></div>
-        <div id="manage" class="general inside"></div>
+            </div>
+        </div>
+        <div id="manage" class="general inside">
+            <div id="status" class="general current-operation"></div>
+            <button id="start-operation" class="general buttonType">Operation</button>
+        </div>
         <div id="reference" class="general inside"></div>
         <div id="recent-operation" class="general inside"></div>
     </div>
@@ -120,7 +126,7 @@ arrow_back_ios
         <div class="attr-ref" id="list"></div>
         <div class="attr-ref" id="detail"></div>
         <div class="attr-ref  startbutton" id="start">
-            <button id="next" class="attr-ref blocked buttonType">Next</button>
+            <button id="start" class="attr-ref blocked buttonType">Start</button>
         </div>
     </div>
 
@@ -130,7 +136,7 @@ arrow_back_ios
             <div class="settings option container" id="logout">
                 <div class="settings option text">LogOut</div>
             </div>
-            <div class="settings option container"  id="serverconfig">
+            <div class="settings option container" id="serverconfig">
                 <div class="settings option text">Server Configuration</div>
             </div>
         </div>

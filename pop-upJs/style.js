@@ -1,5 +1,5 @@
-
 $(document).ready(function () {
+    events.run();
     $('#text.monitor').text('Select crawl type');
     $(document).click(function (ev) {
         let dom = $(ev.target);
@@ -33,15 +33,18 @@ $(document).ready(function () {
             }
         }
     });
+    //reference selecting page--- call references fromserver
     $('#next.setup').click(function () {
         if ($('#next.setup').attr('data-button') === 'next') {
             page.deactivate($('#container.setup'));
             page.activate($('#container.attr-ref'));
+            reference.getReferences($('#list.attr-ref'));
+
         } else {
 
         }
     });
-    events.run();
+
 
 });
 var setup = {
@@ -104,6 +107,8 @@ var events = {
     run: function () {
         this.backStep();
         this.settings();
+        this.operation();
+        this.startCrawl();
     },
     backStep: function () {
         $('span').click(function () {
@@ -134,7 +139,45 @@ var events = {
 
             }
         });
-    }
+    },
+    operation: function () {
+        chrome.storage.local.get(['Operation'], function (result) {
+            let bool = result.Operation;
+            if (!bool || bool == undefined) {
+                $('#start-operation.general').click(function () {
+                    page.activate($('#container.setup'));
+                    page.deactivate($('#container.general'));
+                });
+            } else {
+                $('#status.general.current-operation').text(' Another operation is continuing...');
+                $('#start-operation.general').addClass('blocked');
+            }
+        });
+    },
+    startCrawl: function (bool) {
+
+        $('button#start.attr-ref').click(function () {
+            if (!config.operation) {
+                reference.data();
+                Log.setOperatio(true);
+                $('button#start.attr-ref').addClass('blocked');
+
+            } else {
+                console.log('started');
+            }
+        });
+    },
+    referenceSelected: function () {
+        $('#Cat-ID.XedSelect').change(function () {
+            console.log('selected reff');
+            if ($('#Cat-ID.XedSelect').val() !== '-') {
+                $('button#start.attr-ref').removeClass('blocked');
+            } else {
+                $('button#start.attr-ref').addClass('blocked');
+            }
+        });
+    },
+
 
 };
 var page = {

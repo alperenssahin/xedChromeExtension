@@ -1,95 +1,39 @@
-.XedPop-up {
-
-    /*width: 20px;*/
-    /*height: 20px;*/
-    /*background: brown;*/
-    /*position: absolute;*/
-    /*border-bottom-left-radius: 10px;*/
-    /*border-bottom-right-radius: 10px;*/
-    /*z-index: 10000;*/
-
-}
-
-.pop-up-inside {
-    /*font-size: small;*/
-    /*width: max-content;*/
-    /*height: 400px;*/
-    /*left: 30px;*/
-    /*overflow: scroll;*/
-    /*border: 2px solid rgba(13, 201, 255, 0.57);*/
-    /*background: rgba(236, 242, 255, 0.8);*/
-    /*color:darkslategray;*/
-    /*position: relative;*/
-    /*border-radius: 10px;*/
-    /*z-index: 9999;*/
-}
-
-table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
+.Xed---.Xedcontainer {
     width: 100%;
 }
 
-td, th {
-    border: 1px solid rgba(221, 221, 221, 0.57);
-    text-align: left;
-    padding: 8px;
+.Xed-- {
 
 }
 
-tr:nth-child(even) {
-    background-color: rgba(221, 221, 221, 0.57);
-}
-
-/*control.js*/
-#container.XedTop {
+.Xed.Xedcontrol {
     position: sticky;
     top: 0px;
-    z-index: 999999;
-    overflow: scroll;
-    max-height: 250px;
-    border-bottom: 5px solid rgba(21, 21, 21, 0.85);
+    border-bottom: 5px solid #009a9c;
+    transition: 0.5s;
+    z-index: 10000;
+    font-size: 12px;
+    color: #363636;
 }
 
-.XedTop {
-    background-color: #ffce58;
-}
-
-#right.XedInside {
-    padding: 5px;
+.Xed.XedTop {
+    height: 50px;
+    background-color: #bfebe5;
     display: flex;
-    width: 50%;
     justify-content: space-between;
 }
 
-#left.XedInside {
-    padding: 5px;
+.XedBottom {
+    background-color: #eefaff;
 }
 
-#panel.XedControl {
-    width: 100%;
-    min-height: 150px;
-    background-color: #fff4d2;
+.Xed.Top {
+    margin-top: auto;
+    margin-bottom: auto;
 }
-
-#toggle.Xed {
-    cursor: pointer;
-}
-
-#currentUrl.Xed {
-
-}
-
-#right.Xedpanel {
-    padding-right: 10px;
-    font-size: 12px;
-    width: 100%;
-}
-
-#left.Xedpanel {
-    padding-left: 10px;
-    font-size: 12px;
-    min-width: 25%;
+.Xed.Mid {
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 /*
@@ -103,14 +47,15 @@ tr:nth-child(even) {
     border: 2px solid palevioletred;
 }
 
-.XedUpLayer{
+.XedUpLayer {
     background-color: rgba(165, 42, 42, 0.25);
 }
 
-.XedDownLayer{
+.XedDownLayer {
     border: 2px solid #ffae12;
 }
-.XedDownLayer.XedDownLayerSelected{
+
+.XedDownLayer.XedDownLayerSelected {
     border: 2px solid #341aff;
-    color:red;
+    color: red;
 }

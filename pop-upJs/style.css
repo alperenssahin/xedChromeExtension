@@ -211,7 +211,25 @@ div.operation:hover{
     cursor: not-allowed;
     background-color: #9f9f9f;
 }
+.buttonType {
+    width: 100%;
+    height: 25px;
+    border-radius: 2px;
+    background-color: #0f919c;
+    outline: none;
+    border: none;
+    color: whitesmoke;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+}
 
+.buttonType:hover {
+    background: #0eccc7;
+}
+.blocked.buttonType{
+    background-color: #9f9f9f;
+}
 /*- - - - - - -ref-rec- - - - - - - -*/
 
 #reference-recurrent.setup{

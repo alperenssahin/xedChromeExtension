@@ -1,16 +1,20 @@
 //liten keypress event and eleminate different input value
 
 $(document).keypress(function (ev) {
-    if ($('#ctrl.Xedcrawlcontroller').prop('checked')) {
+    console.log('press');
+    if (configuration.crawl != undefined) {
         //use lastdom ...
-        // console.log(obj);
+        console.log(obj);
+
+
         //get current element that we receive from mouse position
-        let dom = globalValues.lastdom;
+        let dom = glob.lastdom;
         //create active element, unique ıd in lastdom element, remove selected element from rule object
         if (!dom.hasClass('Xed') && (String.fromCharCode(ev.which) === 'x' || String.fromCharCode(ev.which) === 'X')) {
             if (!Xed.isActivated(dom)) {
                 elevator.toDeactivate();
                 selector.create(dom);
+                control.run();
                 // console.log($('.XedActive').get(0).attributes);
                 $('#toprightGetType').html(getData.attrGenerator());
             } else {
@@ -50,9 +54,9 @@ $(document).keypress(function (ev) {
             if (Id != undefined) {
                 elevator.toDeactivate();
                 domControl.focusOn(dom);
-                $('#toprightGetType').html(getData.attrGenerator());
+                control.run();
                 getData.checkType(Id);
-                getData.checkOrigin(Id);
+                getData.checkReference(Id);
                 if (obj.rules[Id].elevator !== null) {
                     elevator.toActivate();
                 }
@@ -62,19 +66,12 @@ $(document).keypress(function (ev) {
 });
 
 //temel selector kontrol değişkenleri
-
+var glob={lastdom:null};
 //target lastdom on page
 $(document).mousemove(function (e) {
-    globalValues.lastdom = $(e.target);
+    glob.lastdom = $(e.target);
 });
-//call events
-$(document).ready(function () {
-    Xed.events.originTypeChange();
-    Xed.events.getTypeChange();
 
-    Xed.events.referenceSignal();
-    Xed.events.crawlController();
-});
 
 
 // var rule = {
@@ -93,7 +90,6 @@ var selector = {
     create: function (dom) {
         let f_rule = {};//= rule; //create rule image
         let id = Xed.uniqueID(); //genearte uniqueID
-        f_rule.originType = globalValues.originType;
         domControl.toActivate(dom, id); //activate on html and sign element
         f_rule.path = parthGenerator.getParent(id);
         f_rule.elevator = null;
@@ -107,8 +103,8 @@ var selector = {
     update: function () {
         let id = $('.XedActive').attr('data-xed');
         let rule = obj.rules[id];
-        rule.originType = globalValues.originType; //update originType
-        // rule.elevator = globalValues.elevator;
+        rule.originType = glob.originType; //update originType
+        // rule.elevator = glob.elevator;
     },
     remove: function (dom) { // destroy element
         let id = dom.attr('data-xed');
@@ -213,17 +209,7 @@ var Xed = {
     }
     ,
     events: {
-        originTypeChange: function () {
-            $('.XedOrigin').change(function () {
-                globalValues.originType = $("input[name='XedOrigin']:checked").val();
-                let id = $('.XedActive').attr('data-xed');
-                logging.info('Origin Type set to ' + globalValues.originType);
-                if (id != undefined) {
-                    selector.update(id);
-                    logging.info(id + '::Origin Type set to ' + globalValues.originType);
-                }
-            });
-        },
+
         getTypeChange: function () {
             $('.XedGetType').change(function () {
                 let type = [];
@@ -237,30 +223,15 @@ var Xed = {
                 obj.rules[id].get = type;
             });
         },
-        referenceSignal: function () {
-            chrome.runtime.onMessage.addListener(
-                function (request) {
-                    if (request.key == "reference") {
-                        globalValues.cReff = request.data;
-                        globalValues.crawl = true;
-                    }
-                });
-        },
-        crawlController: function () {
-            $('#ctrl.Xedcrawlcontroller').mouseup(function (ev) {
-                let dom = $(ev.target);
-                if (dom.hasClass('Xedcrawlcontroller')) {
 
-                    if (globalValues.crawl) {
-                        // console.log('gogogo');
-                        return;
-                    } else {
-                        console.log('attributes not initialised');
-                        $('#ctrl.Xedcrawlcontroller').prop('checked', true);
-                    }
-                }
+        listenAttrChange: function () {
+            $('#attributes.Xed.XedSelect').change(function () {
+                console.log('change');
+               let id = Xed.getActiveID();
+               obj.rules[id].reference.attrID = $('#attributes.Xed.XedSelect').val();
             });
         }
+
 
     },
 
@@ -331,43 +302,3 @@ var parthGenerator = {
     classDeter: ['Xed'],
 };
 
-var getData = {
-    getAttributes: function () {
-        let attr = $('.XedActive').get(0).attributes;
-        let attrList = [];
-        for (let i = 0; i < attr.length; i++) {
-            attrList.push(attr[i].name);
-        }
-        return attrList;
-    },
-    attrGenerator: function () {
-        let attr = this.getAttributes();
-        // console.log(attr);
-        // let li = ['class', 'data-xed', 'id', 'name', 'type', 'value'];
-        let str = '<label>text</label><input type="checkbox" name="text" id="text" class="Xed XedGetType" value="text">';
-        for (let a of attr) {
-            // if (li.indexOf(a) === (-1)) continue;
-            let tmp = '<label>' + a + '</label><input type="checkbox" name="' + a + '" id="' + a + '" class="Xed XedGetType" value="' + a + '">';
-            str += tmp;
-        }
-        return str;
-
-    },
-    checkType: function (id) {
-        let type = obj.rules[id].get;
-        if (type != null) {
-            for (let x of type) {
-                $('#' + x + '.XedGetType').prop('checked', true);
-            }
-        }
-    },
-    checkOrigin: function (id) {
-        let orgi = obj.rules[id].originType;
-        if (orgi === 'unique') {
-            $('#unique.XedOrigin').prop('checked', true);
-        }
-        if (orgi === 'recurrent') {
-            $('#recurrent.XedOrigin').prop('checked', true);
-        }
-    }
-};
