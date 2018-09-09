@@ -79,7 +79,7 @@ span.button {
     margin-top: 8px;
 }
 
-.authentication.input {
+.input {
     width: 100%;
     outline: none;
     border: none;
@@ -88,7 +88,7 @@ span.button {
     transition: 0.5s;
 }
 
-.authentication.input:focus {
+.input:focus {
     border-bottom: 2px solid #0eccc7;
     border-left: 5px solid #009a9c;
 }

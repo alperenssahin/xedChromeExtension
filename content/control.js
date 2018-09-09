@@ -1,8 +1,10 @@
-var obj = {url: null, rules: {}};
-
 var control = {
     run: function () {
-        this.reffSelector();
+        let data = configuration.crawl.type;
+
+        if (data == 'Reference') {
+            this.reffSelector();
+        }
         this.attrSelector();
     },
     reffSelector: function () {
@@ -19,12 +21,14 @@ var control = {
 
         $('.Xed.Top.right').html(str);
         Xed.events.listenAttrChange();
+
     },
     attrSelector: function () {
         let str = getData.attrGenerator();
-        $('.Xed.Mid.right').html(str);
+        $('.Xed.Mid.Top').html(str);
         Xed.events.getTypeChange();
-    }
+    },
+
 
 }
 
@@ -38,17 +42,24 @@ var getData = {
         return attrList;
     },
     attrGenerator: function () {
-        let attr = this.getAttributes();
-        // console.log(attr);
-        // let li = ['class', 'data-xed', 'id', 'name', 'type', 'value'];
-        let str = '<label>text</label><input type="checkbox" name="text" id="text" class="Xed XedGetType" value="text">';
-        for (let a of attr) {
-            // if (li.indexOf(a) === (-1)) continue;
-            let tmp = '<label>' + a + '</label><input type="checkbox" name="' + a + '" id="' + a + '" class="Xed XedGetType" value="' + a + '">';
-            str += tmp;
-        }
-        return str;
+        let str = '';
+        str += '<label class="Xed">Click Event</label><input type="checkbox" name="JSclick" id="JSclick" class="Xed XedGetType JS" value="JSclick">';
+        if (configuration.crawl.type !== 'mapping') {
+            let attr = this.getAttributes();
+            // console.log(attr);
+            // let li = ['class', 'data-xed', 'id', 'name', 'type', 'value'];
+            str += '<label class="Xed">text</label><input type="checkbox" name="text" id="text" class="Xed XedGetType" value="text">';
+            for (let a of attr) {
+                // if (li.indexOf(a) === (-1)) continue;
+                let tmp = '<label class="Xed">' + a + '</label><input type="checkbox" name="' + a + '" id="' + a + '" class="Xed XedGetType" value="' + a + '">';
+                str += tmp;
+            }
+            return str;
 
+        } else {
+            str += '<label>Follow Condition</label><input type="checkbox" name="follow" id="follow" class="Xed XedGetType" value="follow">';
+            return str;
+        }
     },
     checkType: function (id) {
         let type = obj.rules[id].get;
@@ -58,11 +69,17 @@ var getData = {
             }
         }
     },
-    checkReference:function (id) {
+    checkReference: function (id) {
         let attrId = obj.rules[id].reference.attrID;
-        if(attrId != null || attrId != undefined){
+        if (attrId != null || attrId != undefined) {
             $('#attributes.XedSelect').val(attrId);
         }
 
-    }
+    },
+    checkJsEvent: function () {
+        let index = obj.jsEvents.indexOf(Xed.getActiveID());
+        if (index !== -1) {
+            obj.jsEvents[index] = null;
+        }
+    },
 };

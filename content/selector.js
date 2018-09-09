@@ -1,28 +1,31 @@
 //liten keypress event and eleminate different input value
-
+//todo:detect js events
 $(document).keypress(function (ev) {
-    console.log('press');
     if (configuration.crawl != undefined) {
         //use lastdom ...
         console.log(obj);
-
-
         //get current element that we receive from mouse position
         let dom = glob.lastdom;
         //create active element, unique ıd in lastdom element, remove selected element from rule object
         if (!dom.hasClass('Xed') && (String.fromCharCode(ev.which) === 'x' || String.fromCharCode(ev.which) === 'X')) {
+
             if (!Xed.isActivated(dom)) {
+                marker.removeSimilar();
                 elevator.toDeactivate();
                 selector.create(dom);
                 control.run();
-                // console.log($('.XedActive').get(0).attributes);
+                marker.similar();
                 $('#toprightGetType').html(getData.attrGenerator());
             } else {
                 let Down = dom.parent().find('.XedDownLayerSelected');
                 elevator.unselectDownlayer(Down);
+                getData.checkJsEvent();
                 elevator.toDeactivate();
                 selector.remove(dom);
+                marker.removeSimilar();
+
                 $('#toprightGetType').html('');
+
             }
         }
         //decide elevator element to see elements who is in same layer with element
@@ -30,10 +33,8 @@ $(document).keypress(function (ev) {
             if (Xed.isActivated(dom)) {
                 if (!Xed.isCenter(dom)) {
                     elevator.toActivate()
-
                 } else {
                     elevator.toDeactivate()
-
                 }
             }
         }
@@ -44,7 +45,6 @@ $(document).keypress(function (ev) {
                     elevator.selectDownlayer(dom);
                 } else {
                     elevator.unselectDownlayer(dom);
-
                 }
             }
         }
@@ -52,8 +52,10 @@ $(document).keypress(function (ev) {
         if (!dom.hasClass('Xed') && (String.fromCharCode(ev.which) === 'f' || String.fromCharCode(ev.which) === 'F')) {
             let Id = dom.attr('data-xed');
             if (Id != undefined) {
+                marker.removeSimilar();
                 elevator.toDeactivate();
                 domControl.focusOn(dom);
+                marker.similar();
                 control.run();
                 getData.checkType(Id);
                 getData.checkReference(Id);
@@ -66,32 +68,18 @@ $(document).keypress(function (ev) {
 });
 
 //temel selector kontrol değişkenleri
-var glob={lastdom:null};
+var glob = {lastdom: null};
 //target lastdom on page
 $(document).mousemove(function (e) {
     glob.lastdom = $(e.target);
 });
-
-
-
-// var rule = {
-//     originType: null,
-//     path: null,
-//     text: null,
-//     get: [],
-//     elevator: false,
-//     reference: {},
-// };
-
-// var reference = {newType: null, attrID: null, attrTitle: null, newAttr: null};
-
 
 var selector = {
     create: function (dom) {
         let f_rule = {};//= rule; //create rule image
         let id = Xed.uniqueID(); //genearte uniqueID
         domControl.toActivate(dom, id); //activate on html and sign element
-        f_rule.path = parthGenerator.getParent(id);
+        f_rule.path = parthGenerator.getParent(id).real;
         f_rule.elevator = null;
         f_rule.get = null;
         f_rule.reference = {};
@@ -134,7 +122,7 @@ var elevator = {
         // let domm = this.getActiveElementByParent(dom);
         // let id = domm.attr('data-xed');
         let id = $('.XedActive').attr('data-xed');
-        obj.rules[id].elevator = parthGenerator.getParentsByDom(dom);
+        obj.rules[id].elevator = parthGenerator.getParentsByDom(dom).real;
     },
     unselectDownlayer: function (dom) {
         dom.removeClass('XedDownLayerSelected');
@@ -212,34 +200,42 @@ var Xed = {
 
         getTypeChange: function () {
             $('.XedGetType').change(function () {
+
                 let type = [];
                 let dom = $('.XedGetType');
+                let id = Xed.getActiveID();
                 dom.each(function () {
+                    if ($(this).hasClass('JS')) {
+                        if ($(this).prop('checked')) {
+                        obj.jsEvents.push(id);
+                        }else{
+                            let index = obj.jsEvents.indexOf(id);
+                            if(index !== -1){
+                                obj.jsEvents[index] = null;
+                            }
+                        }
+                    }
                     if ($(this).prop('checked')) {
                         type.push($(this).val());
                     }
                 });
-                let id = Xed.getActiveID();
+
                 obj.rules[id].get = type;
             });
         },
-
         listenAttrChange: function () {
             $('#attributes.Xed.XedSelect').change(function () {
                 console.log('change');
-               let id = Xed.getActiveID();
-               obj.rules[id].reference.attrID = $('#attributes.Xed.XedSelect').val();
+                let id = Xed.getActiveID();
+                obj.rules[id].reference.attrID = $('#attributes.Xed.XedSelect').val();
             });
-        }
-
-
+        },
     },
 
 };
-
 var parthGenerator = {
     getParent: function (id) {
-        let parents = [];
+        let parents = {extension: [], real: []};
         let dom = Xed.findDomById(id);
         let par = dom.parents()
             .map(function () {
@@ -249,20 +245,25 @@ var parthGenerator = {
         domControl.toDeactivate(dom);
         let clas = this.classSeperator(dom.get(0).className);
         let i = {tag: dom.get(0).nodeName.toLowerCase(), class: clas, id: dom.get(0).id};
-        parents.push(i);
+        parents.real.push(i);
+        parents.extension.push(i);
         domControl.toActivate(dom, id);
         for (let x = 0; x < par.length; x++) {
             let clas = this.classSeperator(par[x].class);
             let t = {tag: par[x].tag.toLowerCase(), class: clas, id: par[x].id};
-            parents.push(t);
-
+            parents.extension.push(t);
+            if (x == par.length - 3 || x == par.length - 4) {
+                continue;
+            } else {
+                parents.real.push(t);
+            }
         }
         // console.log(types);
         // console.log(parents);
         return parents;
     },
     getParentsByDom: function (dom) {
-        let parents = [];
+        let parents = {extension: [], real: []};
         let par = dom.parents()
             .map(function () {
                 return {tag: this.tagName, id: this.id, class: this.className};
@@ -270,12 +271,17 @@ var parthGenerator = {
         // console.log(par);
         let clas = this.classSeperator(dom.get(0).className);
         let i = {tag: dom.get(0).nodeName.toLowerCase(), class: clas, id: dom.get(0).id};
-        parents.push(i);
+        parents.real.push(i);
+        parents.extension.push(i);
         for (let x = 0; x < par.length; x++) {
             let clas = this.classSeperator(par[x].class);
             let t = {tag: par[x].tag.toLowerCase(), class: clas, id: par[x].id};
-            parents.push(t);
-
+            parents.extension.push(t);
+            if (x == par.length - 3 || x == par.length - 4) {
+                continue;
+            } else {
+                parents.real.push(t);
+            }
         }
         // console.log(types);
         // console.log(parents);
@@ -300,5 +306,64 @@ var parthGenerator = {
         return arr;
     },
     classDeter: ['Xed'],
+    xpathGenerator: function (parents) {
+        let str = '//'
+        for (let i = parents.length - 1; i > -1; i--) {
+            // console.log(parents[i]);
+            str += parents[i].tag
+            if (i == 0) {
+                continue;
+            } else {
+                str += '/';
+            }
+        }
+
+        return str;
+    }
 };
 
+var marker = {
+    href: function () {
+        $('a').addClass('XedMarked');
+    },
+    similar: function () {
+        if (this.setConn()) {
+            let dom = $('.XedActive');
+            let parents = parthGenerator.getParentsByDom(dom);
+            // console.log(parents.real);
+            let str = parthGenerator.xpathGenerator(parents.extension);
+            console.log(str);
+            console.log(parthGenerator.xpathGenerator(parents.real));
+            $(document).xpathEvaluate(str).addClass('XedSimilar');
+        }
+    },
+    removeSimilar: function () {
+        $('.XedSimilar').removeClass('XedSimilar');
+    },
+    setConn: function () {
+        if (configuration.crawl.type === 'mapping') {
+            return true;
+        }
+        if (configuration.crawl.type === 'recurrent') {
+            return true;
+        }
+        if (configuration.crawl.type === 'reference') {
+            return false;
+        }
+    }
+}
+$.fn.xpathEvaluate = function (xpathExpression) {
+    // NOTE: vars not declared local for debug purposes
+    $this = this.first(); // Don't make me deal with multiples before coffee
+
+    // Evaluate xpath and retrieve matching nodes
+    xpathResult = this[0].evaluate(xpathExpression, this[0], null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+
+    result = [];
+    while (elem = xpathResult.iterateNext()) {
+        result.push(elem);
+    }
+
+    $result = jQuery([]).pushStack(result);
+    return $result;
+}

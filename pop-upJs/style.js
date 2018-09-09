@@ -9,6 +9,7 @@ $(document).ready(function () {
             if (id === 'mapping') {
                 $('#next.setup').removeClass('blocked');
                 setup.next('Start');
+                setup.starterFromSetup('mapping');
             }
             if (id === 'scraping') {
                 $('#reference-recurrent.setup').removeClass('blocked');
@@ -27,6 +28,7 @@ $(document).ready(function () {
             if (id === 'recurrent') {
                 $('#next.setup').removeClass('blocked');
                 setup.next('Start');
+                setup.starterFromSetup('recurrent');
 
                 //next data
                 //...
@@ -100,6 +102,24 @@ var setup = {
         if (text === 'Start') {
             $('#next.setup').attr('data-button', 'start');
         }
+    },
+    starterFromSetup: function (type) {
+        $('#next.setup').click(function () {
+            if (!config.operation) {
+
+                let crawl = {
+                    type: type,
+                    title: $('#operation-title.general').val(),
+                    data: null,
+                };
+                chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+                    chrome.tabs.sendMessage(tabs[0].id, {key: "start", data: crawl}, function (response) {
+                    });
+                });
+                Log.setOperatio(true);
+                $('#next.setup').addClass('blocked');
+            }
+        });
     }
 };
 
@@ -151,6 +171,7 @@ var events = {
             } else {
                 $('#status.general.current-operation').text(' Another operation is continuing...');
                 $('#start-operation.general').addClass('blocked');
+                $('#get-ref.general').removeClass('blocked');
             }
         });
     },

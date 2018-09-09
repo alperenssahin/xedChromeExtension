@@ -2,13 +2,24 @@
   "name": "Xedzone Crawler",
   "version": "1.0",
   "description": "Build an Extension!",
-  "permissions": ["activeTab", "declarativeContent", "storage","tabs",
+  "permissions": [
+    "activeTab",
+    "declarativeContent",
+    "storage",
+    "tabs",
     "notifications",
     "http://*/",
-    "https://*/"],
+    "https://*/",
+    "<all_urls>",
+    "webRequestBlocking",
+    "background"
+  ],
   "options_page": "options.html",
   "background": {
-    "scripts": ["background.js"],
+
+    "scripts": [
+      "background.js"
+    ],
     "persistent": false
   },
   "page_action": {
@@ -32,8 +43,15 @@
         "http://*/*",
         "https://*/*"
       ],
-      "js": ["content/jquery-3.3.1.min.js","content/control.js","content/selector.js","content/setup.js"],
-      "css": ["content/style.css"],
+      "js": [
+        "content/jquery-3.3.1.min.js",
+        "content/control.js",
+        "content/selector.js",
+        "content/setup.js"
+      ],
+      "css": [
+        "content/style.css"
+      ],
       "run_at": "document_end"
     }
   ],

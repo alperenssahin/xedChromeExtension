@@ -7,20 +7,24 @@
 }
 
 .Xed.Xedcontrol {
-    position: sticky;
+    position: fixed;
+    width: 100%;
     top: 0px;
     border-bottom: 5px solid #009a9c;
     transition: 0.5s;
     z-index: 10000;
     font-size: 12px;
     color: #363636;
+    background-color: #bfebe5;
 }
 
 .Xed.XedTop {
-    height: 50px;
+    max-height: 50px;
     background-color: #bfebe5;
     display: flex;
     justify-content: space-between;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .XedBottom {
@@ -35,7 +39,30 @@
     margin-top: auto;
     margin-bottom: auto;
 }
+.buttonType {
+    width: 100%;
+    height: 25px;
+    border-radius: 2px;
+    background-color: #0f919c;
+    outline: none;
+    border: none;
+    color: whitesmoke;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+}
 
+.buttonType:hover {
+    background: #0eccc7;
+}
+.blocked.buttonType{
+    background-color: #9f9f9f;
+}
+.blocked{
+    pointer-events: none;
+    cursor: not-allowed;
+    background-color: #9f9f9f;
+}
 /*
 //////inside//////
 */
@@ -58,4 +85,13 @@
 .XedDownLayer.XedDownLayerSelected {
     border: 2px solid #341aff;
     color: red;
+}
+
+.XedMarked{
+    border: 1px solid #ff9328;
+    color: #3873ff;
+}
+
+.XedSimilar{
+     border: 5px solid #ff13c2;
 }
