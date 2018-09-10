@@ -79,7 +79,7 @@ var selector = {
         let f_rule = {};//= rule; //create rule image
         let id = Xed.uniqueID(); //genearte uniqueID
         domControl.toActivate(dom, id); //activate on html and sign element
-        f_rule.path = parthGenerator.getParent(id).real;
+        f_rule.path = pathGenerator.getParent(id).real;
         f_rule.elevator = null;
         f_rule.get = null;
         f_rule.reference = {};
@@ -122,7 +122,8 @@ var elevator = {
         // let domm = this.getActiveElementByParent(dom);
         // let id = domm.attr('data-xed');
         let id = $('.XedActive').attr('data-xed');
-        obj.rules[id].elevator = parthGenerator.getParentsByDom(dom).real;
+        obj.rules[id].elevator = pathGenerator.getParentsByDom(dom).real;
+        obj.rules[id].xpath = pathGenerator.xpathElevatorGenerator(obj.rules[id]);
     },
     unselectDownlayer: function (dom) {
         dom.removeClass('XedDownLayerSelected');
@@ -233,94 +234,6 @@ var Xed = {
     },
 
 };
-var parthGenerator = {
-    getParent: function (id) {
-        let parents = {extension: [], real: []};
-        let dom = Xed.findDomById(id);
-        let par = dom.parents()
-            .map(function () {
-                return {tag: this.tagName, id: this.id, class: this.className};
-            });
-        // console.log(par);
-        domControl.toDeactivate(dom);
-        let clas = this.classSeperator(dom.get(0).className);
-        let i = {tag: dom.get(0).nodeName.toLowerCase(), class: clas, id: dom.get(0).id};
-        parents.real.push(i);
-        parents.extension.push(i);
-        domControl.toActivate(dom, id);
-        for (let x = 0; x < par.length; x++) {
-            let clas = this.classSeperator(par[x].class);
-            let t = {tag: par[x].tag.toLowerCase(), class: clas, id: par[x].id};
-            parents.extension.push(t);
-            if (x == par.length - 3 || x == par.length - 4) {
-                continue;
-            } else {
-                parents.real.push(t);
-            }
-        }
-        // console.log(types);
-        // console.log(parents);
-        return parents;
-    },
-    getParentsByDom: function (dom) {
-        let parents = {extension: [], real: []};
-        let par = dom.parents()
-            .map(function () {
-                return {tag: this.tagName, id: this.id, class: this.className};
-            });
-        // console.log(par);
-        let clas = this.classSeperator(dom.get(0).className);
-        let i = {tag: dom.get(0).nodeName.toLowerCase(), class: clas, id: dom.get(0).id};
-        parents.real.push(i);
-        parents.extension.push(i);
-        for (let x = 0; x < par.length; x++) {
-            let clas = this.classSeperator(par[x].class);
-            let t = {tag: par[x].tag.toLowerCase(), class: clas, id: par[x].id};
-            parents.extension.push(t);
-            if (x == par.length - 3 || x == par.length - 4) {
-                continue;
-            } else {
-                parents.real.push(t);
-            }
-        }
-        // console.log(types);
-        // console.log(parents);
-        return parents;
-    },
-    classSeperator: function (str) {
-        let classes = str.split(' ');
-        let arr = [];
-
-        for (let clas of classes) {
-            let con = false;
-            for (let deter of this.classDeter) {
-                if (clas.includes(deter)) {
-                    con = true;
-                    break;
-                }
-            }
-
-            if (con) continue;
-            arr.push(clas);
-        }
-        return arr;
-    },
-    classDeter: ['Xed'],
-    xpathGenerator: function (parents) {
-        let str = '//'
-        for (let i = parents.length - 1; i > -1; i--) {
-            // console.log(parents[i]);
-            str += parents[i].tag
-            if (i == 0) {
-                continue;
-            } else {
-                str += '/';
-            }
-        }
-
-        return str;
-    }
-};
 
 var marker = {
     href: function () {
@@ -329,11 +242,11 @@ var marker = {
     similar: function () {
         if (this.setConn()) {
             let dom = $('.XedActive');
-            let parents = parthGenerator.getParentsByDom(dom);
+            let parents = pathGenerator.getParentsByDom(dom);
             // console.log(parents.real);
-            let str = parthGenerator.xpathGenerator(parents.extension);
+            let str = pathGenerator.xpathGenerator(parents.extension);
             console.log(str);
-            console.log(parthGenerator.xpathGenerator(parents.real));
+            console.log(pathGenerator.xpathGenerator(parents.real));
             $(document).xpathEvaluate(str).addClass('XedSimilar');
         }
     },
@@ -351,19 +264,4 @@ var marker = {
             return false;
         }
     }
-}
-$.fn.xpathEvaluate = function (xpathExpression) {
-    // NOTE: vars not declared local for debug purposes
-    $this = this.first(); // Don't make me deal with multiples before coffee
-
-    // Evaluate xpath and retrieve matching nodes
-    xpathResult = this[0].evaluate(xpathExpression, this[0], null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
-
-    result = [];
-    while (elem = xpathResult.iterateNext()) {
-        result.push(elem);
-    }
-
-    $result = jQuery([]).pushStack(result);
-    return $result;
 }

@@ -47,7 +47,8 @@
         "content/jquery-3.3.1.min.js",
         "content/control.js",
         "content/selector.js",
-        "content/setup.js"
+        "content/setup.js",
+        "content/path.js"
       ],
       "css": [
         "content/style.css"

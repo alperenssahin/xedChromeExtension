@@ -8,6 +8,7 @@ $(document).ready(function () {
             setup.operation.finish();
             if (id === 'mapping') {
                 $('#next.setup').removeClass('blocked');
+                $('#next.setup').attr('data-crawl', 'mapping');
                 setup.next('Start');
                 setup.starterFromSetup('mapping');
             }
@@ -20,6 +21,7 @@ $(document).ready(function () {
             setup.ref_rec.finish();
             if (id === 'reference') {
                 $('#next.setup').removeClass('blocked');
+                $('#next.setup').attr('data-crawl', 'reference');
                 setup.next('Next');
 
                 //....
@@ -28,6 +30,7 @@ $(document).ready(function () {
             if (id === 'recurrent') {
                 $('#next.setup').removeClass('blocked');
                 setup.next('Start');
+                $('#next.setup').attr('data-crawl', 'reference');
                 setup.starterFromSetup('recurrent');
 
                 //next data
@@ -106,18 +109,20 @@ var setup = {
     starterFromSetup: function (type) {
         $('#next.setup').click(function () {
             if (!config.operation) {
-
-                let crawl = {
-                    type: type,
-                    title: $('#operation-title.general').val(),
-                    data: null,
-                };
-                chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-                    chrome.tabs.sendMessage(tabs[0].id, {key: "start", data: crawl}, function (response) {
+                let DataCrawl = $('#next.setup').attr('data-crawl');
+                if (DataCrawl === 'mapping' || DataCrawl === 'recurrent') {
+                    let crawl = {
+                        type: type,
+                        title: $('#operation-title.general').val(),
+                        data: null,
+                    };
+                    chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+                        chrome.tabs.sendMessage(tabs[0].id, {key: "start", data: crawl}, function (response) {
+                        });
                     });
-                });
-                Log.setOperatio(true);
-                $('#next.setup').addClass('blocked');
+                    Log.setOperatio(true);
+                    $('#next.setup').addClass('blocked');
+                }
             }
         });
     }
@@ -182,7 +187,6 @@ var events = {
                 reference.data();
                 Log.setOperatio(true);
                 $('button#start.attr-ref').addClass('blocked');
-
             } else {
                 console.log('started');
             }

@@ -3,13 +3,16 @@
 }
 
 .Xed-- {
-
+    margin-top: 40px;
 }
 
 .Xed.Xedcontrol {
+    display: block;
     position: fixed;
     width: 100%;
     top: 0px;
+    max-height: 50px;
+    min-height: 40px;
     border-bottom: 5px solid #009a9c;
     transition: 0.5s;
     z-index: 10000;
@@ -25,6 +28,9 @@
     justify-content: space-between;
     margin-left: 10px;
     margin-right: 10px;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: 8px;
 }
 
 .XedBottom {
